@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { SitemapNode } from '../types';
-import { BarChart3, AlertCircle, CheckCircle, Clock, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { BarChart3, AlertCircle, CheckCircle, Clock, ZoomIn, ZoomOut, RotateCcw, Download, FileImage, FileText } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 interface SitemapVisualizerProps {
   data: SitemapNode[];
@@ -143,10 +145,30 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .style('fill', '#374151')
       .style('text-shadow', '0 1px 2px rgba(255,255,255,0.8)')
       .text(d => {
-        const title = d.data.title && d.data.title.length > 15 
-          ? d.data.title.substring(0, 15) + '...' 
-          : d.data.title || 'No Title';
-        return title;
+        let title = d.data.title;
+        
+        // If no title, try to extract from URL
+        if (!title || title === 'No Title' || title === 'Untitled Page') {
+          try {
+            const urlPath = new URL(d.data.url).pathname;
+            const pathSegments = urlPath.split('/').filter(segment => segment.length > 0);
+            if (pathSegments.length > 0) {
+              const lastSegment = pathSegments[pathSegments.length - 1];
+              title = lastSegment.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, '');
+              title = title.charAt(0).toUpperCase() + title.slice(1);
+            }
+          } catch (e) {
+            // URL parsing failed, use fallback
+          }
+        }
+        
+        // Final fallback
+        if (!title || title === 'No Title' || title === 'Untitled Page') {
+          title = 'Page';
+        }
+        
+        // Truncate if too long
+        return title.length > 15 ? title.substring(0, 15) + '...' : title;
       });
 
     // Add depth indicators
@@ -198,9 +220,28 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
           'error': '#ef4444'
         }[d.data.status] || '#6b7280';
 
+        // Get improved title for tooltip
+        let tooltipTitle = d.data.title;
+        if (!tooltipTitle || tooltipTitle === 'No Title' || tooltipTitle === 'Untitled Page') {
+          try {
+            const urlPath = new URL(d.data.url).pathname;
+            const pathSegments = urlPath.split('/').filter(segment => segment.length > 0);
+            if (pathSegments.length > 0) {
+              const lastSegment = pathSegments[pathSegments.length - 1];
+              tooltipTitle = lastSegment.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, '');
+              tooltipTitle = tooltipTitle.charAt(0).toUpperCase() + tooltipTitle.slice(1);
+            }
+          } catch (e) {
+            // URL parsing failed, use fallback
+          }
+        }
+        if (!tooltipTitle || tooltipTitle === 'No Title' || tooltipTitle === 'Untitled Page') {
+          tooltipTitle = 'Page';
+        }
+
         tooltip.html(`
           <div style="margin-bottom: 8px;">
-            <strong style="color: ${statusColor}">${d.data.title || 'No Title'}</strong>
+            <strong style="color: ${statusColor}">${tooltipTitle}</strong>
           </div>
           <div style="font-size: 11px; color: #d1d5db; margin-bottom: 4px;">
             ${d.data.url}
@@ -328,6 +369,74 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     }
   };
 
+  // Download functions
+  const handleDownloadPNG = async () => {
+    if (!svgRef.current) return;
+
+    try {
+      const svgElement = svgRef.current;
+      const canvas = await html2canvas(svgElement.parentElement!, {
+        background: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        width: width,
+        height: height
+      });
+
+      const link = document.createElement('a');
+      link.download = `sitemap-tree-${new Date().toISOString().split('T')[0]}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch (error) {
+      console.error('Error generating PNG:', error);
+      alert('Failed to generate PNG. Please try again.');
+    }
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!svgRef.current) return;
+
+    try {
+      const svgElement = svgRef.current;
+      const canvas = await html2canvas(svgElement.parentElement!, {
+        background: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        width: width,
+        height: height
+      });
+
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: width > height ? 'landscape' : 'portrait',
+        unit: 'mm',
+        format: 'a4'
+      });
+
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 295; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save(`sitemap-tree-${new Date().toISOString().split('T')[0]}.pdf`);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF. Please try again.');
+    }
+  };
+
   return (
     <div className="w-full">
       <div className="mb-6 text-center">
@@ -341,32 +450,56 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       </div>
       
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-large p-6">
-        {/* Zoom Controls */}
+        {/* Controls */}
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600 font-medium">Zoom Controls:</span>
-            <div className="flex items-center gap-1">
-              <button
-                onClick={handleZoomOut}
-                className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
-                title="Zoom Out"
-              >
-                <ZoomOut className="w-4 h-4 text-gray-600" />
-              </button>
-              <button
-                onClick={handleZoomIn}
-                className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
-                title="Zoom In"
-              >
-                <ZoomIn className="w-4 h-4 text-gray-600" />
-              </button>
-              <button
-                onClick={handleResetZoom}
-                className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
-                title="Reset Zoom"
-              >
-                <RotateCcw className="w-4 h-4 text-gray-600" />
-              </button>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600 font-medium">Zoom Controls:</span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={handleZoomOut}
+                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                  title="Zoom Out"
+                >
+                  <ZoomOut className="w-4 h-4 text-gray-600" />
+                </button>
+                <button
+                  onClick={handleZoomIn}
+                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                  title="Zoom In"
+                >
+                  <ZoomIn className="w-4 h-4 text-gray-600" />
+                </button>
+                <button
+                  onClick={handleResetZoom}
+                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                  title="Reset Zoom"
+                >
+                  <RotateCcw className="w-4 h-4 text-gray-600" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-gray-600 font-medium">Export:</span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={handleDownloadPNG}
+                  className="flex items-center gap-2 px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors duration-200 text-sm font-medium"
+                  title="Download as PNG"
+                >
+                  <FileImage className="w-4 h-4" />
+                  PNG
+                </button>
+                <button
+                  onClick={handleDownloadPDF}
+                  className="flex items-center gap-2 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors duration-200 text-sm font-medium"
+                  title="Download as PDF"
+                >
+                  <FileText className="w-4 h-4" />
+                  PDF
+                </button>
+              </div>
             </div>
           </div>
           <div className="text-sm text-gray-600">

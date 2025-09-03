@@ -61,9 +61,23 @@ class SitemapService {
         } catch (error) {
           console.error(`Error crawling ${url}:`, error);
           if (parent) {
+            // Try to extract a meaningful title from URL even for error cases
+            let errorTitle = 'Error';
+            try {
+              const urlPath = new URL(url).pathname;
+              const pathSegments = urlPath.split('/').filter(segment => segment.length > 0);
+              if (pathSegments.length > 0) {
+                const lastSegment = pathSegments[pathSegments.length - 1];
+                errorTitle = lastSegment.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, '');
+                errorTitle = errorTitle.charAt(0).toUpperCase() + errorTitle.slice(1);
+              }
+            } catch (e) {
+              // Keep default error title
+            }
+            
             parent.children.push({
               url,
-              title: 'Error',
+              title: errorTitle,
               depth,
               children: [],
               parent,
@@ -141,7 +155,34 @@ class SitemapService {
       });
 
       const $ = cheerio.load(response.data);
-      const title = $('title').first().text().trim() || 'No Title';
+      let title = $('title').first().text().trim();
+      
+      // If no title found, try to extract from h1 tag
+      if (!title) {
+        title = $('h1').first().text().trim();
+      }
+      
+      // If still no title, try to extract from URL path
+      if (!title) {
+        try {
+          const urlPath = new URL(url).pathname;
+          const pathSegments = urlPath.split('/').filter(segment => segment.length > 0);
+          if (pathSegments.length > 0) {
+            // Use the last meaningful segment of the URL path
+            const lastSegment = pathSegments[pathSegments.length - 1];
+            title = lastSegment.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, ''); // Remove file extension
+            title = title.charAt(0).toUpperCase() + title.slice(1); // Capitalize first letter
+          }
+        } catch (e) {
+          // URL parsing failed, continue with fallback
+        }
+      }
+      
+      // Final fallback
+      if (!title) {
+        title = 'Untitled Page';
+      }
+      
       node.title = title;
       node.status = 'completed';
       node.lastModified = response.headers['last-modified'];
