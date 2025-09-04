@@ -9,7 +9,8 @@ import SitemapList from './components/SitemapList';
 import ExportOptions from './components/ExportOptions';
 import MetaAnalysis from './components/MetaAnalysis';
 import StructureAnalysis from './components/StructureAnalysis';
-import { Network, BarChart3, List, Sparkles, Tag, GitBranch, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
+import { RealisticChartIcon, RealisticListIcon, RealisticTagIcon, RealisticBranchIcon } from './components/RealisticIcons';
 
 const defaultCrawlOptions: CrawlOptions = {
   maxDepth: 3,
@@ -136,14 +137,6 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-4">
-              <div className="relative">
-                <div className="w-12 h-12 bg-brand-blue-500 rounded-xl flex items-center justify-center shadow-lg transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
-                  <Network className="w-7 h-7 text-white" />
-                </div>
-                <div className="absolute -top-1 -right-1 w-5 h-5 bg-accent-400 rounded-full flex items-center justify-center shadow-md animate-pulse">
-                  <Sparkles className="w-3 h-3 text-white" />
-                </div>
-              </div>
               <div>
                 <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-white-500 to-brand-blue-500">
                   Sitemap Generator
@@ -189,7 +182,7 @@ const App: React.FC = () => {
                           ? 'bg-brand-blue-500/20 text-brand-blue-500 shadow-sm' 
                           : 'bg-white/10 text-gray-400'
                       }`}>
-                        <BarChart3 className="w-5 h-5" />
+                        <RealisticChartIcon width={20} height={20} />
                       </div>
                       Visual Tree
                     </button>
@@ -206,7 +199,7 @@ const App: React.FC = () => {
                           ? 'bg-brand-blue-500/20 text-brand-blue-500 shadow-sm' 
                           : 'bg-white/10 text-gray-400'
                       }`}>
-                        <List className="w-5 h-5" />
+                        <RealisticListIcon width={20} height={20} />
                       </div>
                       List View
                     </button>
@@ -223,7 +216,7 @@ const App: React.FC = () => {
                           ? 'bg-brand-blue-500/20 text-brand-blue-500 shadow-sm' 
                           : 'bg-white/10 text-gray-400'
                       }`}>
-                        <Tag className="w-5 h-5" />
+                        <RealisticTagIcon width={20} height={20} />
                       </div>
                       Meta Analysis
                     </button>
@@ -240,7 +233,7 @@ const App: React.FC = () => {
                           ? 'bg-brand-blue-500/20 text-brand-blue-500 shadow-sm' 
                           : 'bg-white/10 text-gray-400'
                       }`}>
-                        <GitBranch className="w-5 h-5" />
+                        <RealisticBranchIcon width={20} height={20} />
                       </div>
                       Structure Analysis
                     </button>
@@ -351,9 +344,6 @@ const App: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <div className="flex justify-center items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md">
-                <Network className="w-5 h-5 text-white" />
-              </div>
               <span className="text-lg font-semibold text-white-500">Sitemap Generator</span>
             </div>
             <p className="text-white-500/70 mb-2">Built with React, TypeScript, and D3.js</p>

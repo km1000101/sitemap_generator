@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { SitemapNode } from '../types';
-import { BarChart3, AlertCircle, CheckCircle, Clock, ZoomIn, ZoomOut, RotateCcw, Download, FileImage, FileText } from 'lucide-react';
+import { AlertCircle, CheckCircle, Clock, ZoomIn, ZoomOut, RotateCcw, Download, FileImage, FileText } from 'lucide-react';
+import { RealisticChartIcon } from './RealisticIcons';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
@@ -691,12 +692,13 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     try {
       const svgElement = svgRef.current;
       const canvas = await html2canvas(svgElement.parentElement!, {
-        background: '#0A1128',
+        background: '#000000',
         useCORS: true,
         allowTaint: true,
+        scale: 3,
         width: width,
         height: height
-      });
+      } as any);
 
       const link = document.createElement('a');
       link.download = `sitemap-tree-${new Date().toISOString().split('T')[0]}.png`;
@@ -713,36 +715,85 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
 
     try {
       const svgElement = svgRef.current;
-      const canvas = await html2canvas(svgElement.parentElement!, {
-        background: '#0A1128',
+      const captureTarget = svgElement.parentElement!; // container with background and padding
+
+      // Hide tooltips/interactive overlays during capture
+      const tooltips = Array.from(document.querySelectorAll('.tooltip')) as HTMLElement[];
+      tooltips.forEach(t => (t.style.display = 'none'));
+
+      // Ensure a white background to avoid dark/transparent PDF
+      const previousBg = captureTarget.style.background;
+      captureTarget.style.background = '#ffffff';
+
+      // Render at high scale for crispness
+      const canvas = await html2canvas(captureTarget, {
+        backgroundColor: '#ffffff',
         useCORS: true,
         allowTaint: true,
-        width: width,
-        height: height
-      });
+        scale: 4,
+        width: captureTarget.scrollWidth,
+        height: captureTarget.scrollHeight,
+        windowWidth: captureTarget.scrollWidth,
+        windowHeight: captureTarget.scrollHeight
+      } as any);
+
+      // Restore styles
+      captureTarget.style.background = previousBg;
+      tooltips.forEach(t => (t.style.display = ''));
 
       const imgData = canvas.toDataURL('image/png');
+
+      // PDF setup with margins and header
       const pdf = new jsPDF({
-        orientation: width > height ? 'landscape' : 'portrait',
+        orientation: (captureTarget.scrollWidth >= captureTarget.scrollHeight) ? 'landscape' : 'portrait',
         unit: 'mm',
         format: 'a4'
       });
 
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 295; // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 10; // mm
+      const headerHeight = 10; // mm
 
-      let position = 0;
+      const usableWidth = pageWidth - margin * 2;
+      const usableHeight = pageHeight - margin * 2 - headerHeight;
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      const imgWidthMm = usableWidth;
+      const imgHeightMm = (canvas.height * imgWidthMm) / canvas.width;
 
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
+      // Header
+      pdf.setFontSize(12);
+      pdf.setTextColor(20);
+      const title = 'Sitemap Visual Tree';
+      const dateStr = new Date().toLocaleString();
+      pdf.text(title, margin, margin + 6);
+      pdf.setFontSize(9);
+      pdf.setTextColor(100);
+      pdf.text(dateStr, pageWidth - margin, margin + 6, { align: 'right' as any });
+
+      // Add image, paginate if taller than one page
+      let yOffset = margin + headerHeight;
+      let remainingHeight = imgHeightMm;
+      let imgY = 0;
+
+      // We reuse the same image and shift it up for each subsequent page
+      pdf.addImage(imgData, 'PNG', margin, yOffset, imgWidthMm, imgHeightMm);
+      remainingHeight -= usableHeight;
+      imgY = remainingHeight * -1; // tracked for clarity
+
+      while (remainingHeight > 0) {
         pdf.addPage();
-        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+        // Header on each page
+        pdf.setFontSize(12);
+        pdf.setTextColor(20);
+        pdf.text(title, margin, margin + 6);
+        pdf.setFontSize(9);
+        pdf.setTextColor(100);
+        pdf.text(dateStr, pageWidth - margin, margin + 6, { align: 'right' as any });
+
+        const position = (remainingHeight - imgHeightMm) + (margin + headerHeight);
+        pdf.addImage(imgData, 'PNG', margin, position, imgWidthMm, imgHeightMm);
+        remainingHeight -= usableHeight;
       }
 
       pdf.save(`sitemap-tree-${new Date().toISOString().split('T')[0]}.pdf`);
@@ -757,7 +808,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       <div className="mb-6 text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
           <div className="w-10 h-10 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
-            <BarChart3 className="w-5 h-5 text-white" />
+            <RealisticChartIcon width={20} height={20} />
           </div>
           <h3 className="text-xl font-bold text-white-500">Visual Tree View</h3>
         </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Globe, Play, AlertCircle, Sparkles, Zap } from 'lucide-react';
+import { Play, AlertCircle, Sparkles, Zap } from 'lucide-react';
+import { RealisticGlobeIcon } from './RealisticIcons';
 
 interface UrlInputProps {
   onStartCrawl: (url: string) => void;
@@ -52,7 +53,7 @@ const UrlInput: React.FC<UrlInputProps> = ({ onStartCrawl, disabled = false, isL
     <div className="bg-dark-blue-800/60 backdrop-blur-lg rounded-3xl border border-white/10 p-8 shadow-large">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-12 h-12 bg-brand-blue-500 rounded-xl flex items-center justify-center shadow-lg transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
-          <Globe className="w-6 h-6 text-white" />
+          <RealisticGlobeIcon width={24} height={24} />
         </div>
         <div>
           <h3 className="text-2xl font-bold text-white-500">Website URL</h3>
@@ -83,7 +84,7 @@ const UrlInput: React.FC<UrlInputProps> = ({ onStartCrawl, disabled = false, isL
               }`}
             />
             <div className="absolute left-5 top-1/2 transform -translate-y-1/2 w-6 h-6 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md">
-              <Globe className="w-4 h-4 text-white" />
+              <RealisticGlobeIcon width={16} height={16} />
             </div>
           </div>
           {error && (
@@ -144,7 +145,7 @@ const UrlInput: React.FC<UrlInputProps> = ({ onStartCrawl, disabled = false, isL
         </div>
         <div className="flex items-center gap-3 p-3 bg-white/10 rounded-lg border border-white/20 shadow-sm">
           <div className="w-8 h-8 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md">
-            <Globe className="w-4 h-4 text-white" />
+            <RealisticGlobeIcon width={16} height={16} />
           </div>
           <span className="text-sm font-medium text-white-500">Smart Crawling</span>
         </div>

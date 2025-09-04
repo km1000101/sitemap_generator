@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SitemapNode } from '../types';
-import { ChevronRight, ChevronDown, ExternalLink, AlertCircle, CheckCircle, Clock, Layers, Globe, FileText } from 'lucide-react';
+import { ChevronRight, ChevronDown, ExternalLink, AlertCircle, CheckCircle, Clock, Globe, FileText, Layers } from 'lucide-react';
+import { RealisticListIcon } from './RealisticIcons';
 
 interface SitemapListProps {
   nodes: SitemapNode[];
@@ -178,7 +179,7 @@ const SitemapList: React.FC<SitemapListProps> = ({ nodes, onNodeClick }) => {
       <div className="px-6 py-4 border-b border-white/10 bg-white/10 backdrop-blur-sm rounded-t-3xl">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
-            <Layers className="w-5 h-5 text-white" />
+            <RealisticListIcon width={20} height={20} />
           </div>
           <div>
             <h3 className="text-xl font-bold text-white-500">Sitemap Structure</h3>
@@ -190,7 +191,7 @@ const SitemapList: React.FC<SitemapListProps> = ({ nodes, onNodeClick }) => {
       <div className="max-h-96 overflow-y-auto p-2">
         {nodes.length === 0 ? (
           <div className="text-center py-12 text-gray-400 bg-white/10 rounded-xl m-2 border border-white/20 shadow-sm">
-            <Layers className="w-12 h-12 mx-auto mb-4 text-gray-500" />
+            <RealisticListIcon width={40} height={40} />
             <p>No sitemap data available</p>
           </div>
         ) : (

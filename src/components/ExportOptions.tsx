@@ -1,6 +1,7 @@
 import React from 'react';
 import { SitemapData } from '../types';
 import { Download, FileText, Code, Share2, FileDown, Database, Table } from 'lucide-react';
+import { RealisticDocumentIcon } from './RealisticIcons';
 
 interface ExportOptionsProps {
   sitemapData: SitemapData | null;
@@ -52,7 +53,7 @@ const ExportOptions: React.FC<ExportOptionsProps> = ({
         <div className="group bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:border-brand-blue-300 transition-all duration-300 shadow-soft hover:shadow-medium">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md">
-              <Code className="w-5 h-5 text-white" />
+              <RealisticDocumentIcon width={20} height={20} />
             </div>
             <div>
               <span className="font-semibold text-white-500 text-lg">XML Sitemap</span>

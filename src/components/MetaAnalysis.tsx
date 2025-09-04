@@ -1,6 +1,7 @@
 import React from 'react';
 import { MetaAnalysis as IMetaAnalysis } from '../types';
-import { Tag, TrendingUp, AlertTriangle, CheckCircle, BarChart3, Target, Eye, Share2 } from 'lucide-react';
+import { TrendingUp, AlertTriangle, CheckCircle, Target, Eye, Share2 } from 'lucide-react';
+import { RealisticTagIcon, RealisticChartIcon } from './RealisticIcons';
 
 interface MetaAnalysisProps {
   metaAnalysis: IMetaAnalysis;
@@ -30,7 +31,7 @@ const MetaAnalysis: React.FC<MetaAnalysisProps> = ({ metaAnalysis }) => {
       <div className="mb-6 text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
           <div className="w-10 h-10 bg-accent-500 rounded-lg flex items-center justify-center shadow-md transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
-            <Tag className="w-5 h-5 text-white" />
+            <RealisticTagIcon width={20} height={20} />
           </div>
           <h3 className="text-xl font-bold text-white-500">Meta Tag Analysis</h3>
         </div>
@@ -157,7 +158,7 @@ const MetaAnalysis: React.FC<MetaAnalysisProps> = ({ metaAnalysis }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 shadow-soft">
           <h4 className="font-semibold text-white-500 mb-4 flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-brand-blue-500" />
+            <RealisticChartIcon width={20} height={20} />
             Content Optimization
           </h4>
           <div className="space-y-3">

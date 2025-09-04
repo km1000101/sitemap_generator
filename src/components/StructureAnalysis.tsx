@@ -1,6 +1,7 @@
 import React from 'react';
 import { StructureAnalysis as IStructureAnalysis } from '../types';
-import { Network, BarChart3, Link, Image, FileText, Layers, AlertTriangle, TrendingUp } from 'lucide-react';
+import { Link, Image, FileText, Layers, AlertTriangle, TrendingUp } from 'lucide-react';
+import { RealisticBranchIcon, RealisticChartIcon } from './RealisticIcons';
 
 interface StructureAnalysisProps {
   structureAnalysis: IStructureAnalysis;
@@ -12,7 +13,7 @@ const StructureAnalysis: React.FC<StructureAnalysisProps> = ({ structureAnalysis
       <div className="mb-6 text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
           <div className="w-10 h-10 bg-accent-500 rounded-lg flex items-center justify-center shadow-md transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
-            <Network className="w-5 h-5 text-white" />
+            <RealisticBranchIcon width={20} height={20} />
           </div>
           <h3 className="text-xl font-bold text-white-500">Structure Analysis</h3>
         </div>
@@ -31,7 +32,7 @@ const StructureAnalysis: React.FC<StructureAnalysisProps> = ({ structureAnalysis
 
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 shadow-soft text-center">
           <div className="w-12 h-12 bg-success-500 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md">
-            <BarChart3 className="w-6 h-6 text-white" />
+            <RealisticChartIcon width={24} height={24} />
           </div>
           <div className="text-2xl font-bold text-white-500 mb-1">{structureAnalysis.averageDepth.toFixed(1)}</div>
           <div className="text-sm text-gray-400">Average Depth</div>
