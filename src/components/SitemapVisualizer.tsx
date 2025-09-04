@@ -120,6 +120,39 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       }
     };
 
+    // Single-word display title extractor
+    const computeOneWordTitle = (d: d3.HierarchyPointNode<SitemapNode>) => {
+      // Prefer URL path segment to ensure slugs like "about"/"contact" map directly
+      try {
+        const urlPath = new URL(d.data.url).pathname;
+        const pathSegments = urlPath.split('/').filter(segment => segment.length > 0);
+        if (pathSegments.length > 0) {
+          const lastSegment = pathSegments[pathSegments.length - 1];
+          const noExt = lastSegment.replace(/\.[^/.]+$/, '');
+          const normalized = noExt.replace(/[-_]+/g, ' ').trim();
+          if (normalized.length > 0) {
+            const firstToken = normalized.split(/\s+/)[0];
+            return firstToken.toLowerCase();
+          }
+        }
+      } catch (_) {}
+
+      // Fallback to first word of explicit title
+      if (d.data.title) {
+        const first = d.data.title.trim().split(/\s+/)[0];
+        if (first) return first.toLowerCase();
+      }
+
+      // Fallback to keyword if present
+      const kw = d.data.metaTags?.keywords;
+      if (kw && kw.length > 0) {
+        const first = String(kw[0]).trim().split(/\s+/)[0];
+        if (first) return first.toLowerCase();
+      }
+
+      return 'page';
+    };
+
     // Create links with elbow connectors
     g.selectAll('.link')
       .data(treeData.links())
@@ -248,7 +281,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     dots.append('circle').attr('cx', 8).attr('r', 3).attr('fill', '#9CA3AF');
     dots.append('circle').attr('cx', 16).attr('r', 3).attr('fill', '#9CA3AF');
 
-    // Header title (page name in white, centered)
+    // Header title (single-word page name in white, centered)
     nodes.append('text')
       .attr('class', 'header-title')
       .attr('x', cardWidth / 2)
@@ -259,7 +292,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .style('fill', '#ffffff')
       .style('pointer-events', 'none')
       .text(d => {
-        const t = computeTitle(d as any);
+        const t = computeOneWordTitle(d as any);
         return t.length > 36 ? t.substring(0, 36) + '…' : t;
       });
 
@@ -364,7 +397,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .style('font-size', '12px')
       .style('line-height', '16px')
       .style('padding', '6px 6px 4px')
-      .text(d => computeTitle(d as any));
+      .text(d => computeOneWordTitle(d as any));
 
     titleDisplay.on('dblclick', (event, d: any) => {
       event.stopPropagation();
