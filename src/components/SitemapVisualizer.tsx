@@ -93,6 +93,33 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
 
     // Card styling continues below using the same dimensions defined earlier
 
+    // Helper to compute safe title/labels (placed early for use by header text)
+    const computeTitle = (d: d3.HierarchyPointNode<SitemapNode>) => {
+      let title = d.data.title;
+      if (!title || title === 'No Title' || title === 'Untitled Page') {
+        try {
+          const urlPath = new URL(d.data.url).pathname;
+          const pathSegments = urlPath.split('/').filter(segment => segment.length > 0);
+          if (pathSegments.length > 0) {
+            const lastSegment = pathSegments[pathSegments.length - 1];
+            title = lastSegment.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, '');
+            title = title.charAt(0).toUpperCase() + title.slice(1);
+          }
+        } catch (_) {}
+      }
+      if (!title) title = 'Page';
+      return title;
+    };
+
+    const computeFooter = (d: d3.HierarchyPointNode<SitemapNode>) => {
+      try {
+        const hostname = new URL(d.data.url).hostname;
+        return hostname.replace(/^www\./, '');
+      } catch (_) {
+        return 'Link';
+      }
+    };
+
     // Create links with elbow connectors
     g.selectAll('.link')
       .data(treeData.links())
@@ -221,6 +248,21 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     dots.append('circle').attr('cx', 8).attr('r', 3).attr('fill', '#9CA3AF');
     dots.append('circle').attr('cx', 16).attr('r', 3).attr('fill', '#9CA3AF');
 
+    // Header title (page name in white, centered)
+    nodes.append('text')
+      .attr('class', 'header-title')
+      .attr('x', cardWidth / 2)
+      .attr('y', headerHeight / 2 + 4)
+      .style('text-anchor', 'middle')
+      .style('font-size', '12px')
+      .style('font-weight', '700')
+      .style('fill', '#ffffff')
+      .style('pointer-events', 'none')
+      .text(d => {
+        const t = computeTitle(d as any);
+        return t.length > 36 ? t.substring(0, 36) + '…' : t;
+      });
+
     // Node action buttons (add child / delete)
     const actionGroup = nodes.append('g').attr('transform', `translate(${cardWidth - 36}, 6)`);
     // Add button
@@ -292,32 +334,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       }
     });
 
-    // Helper to compute safe title/labels
-    const computeTitle = (d: d3.HierarchyPointNode<SitemapNode>) => {
-      let title = d.data.title;
-      if (!title || title === 'No Title' || title === 'Untitled Page') {
-        try {
-          const urlPath = new URL(d.data.url).pathname;
-          const pathSegments = urlPath.split('/').filter(segment => segment.length > 0);
-          if (pathSegments.length > 0) {
-            const lastSegment = pathSegments[pathSegments.length - 1];
-            title = lastSegment.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, '');
-            title = title.charAt(0).toUpperCase() + title.slice(1);
-          }
-        } catch (_) {}
-      }
-      if (!title) title = 'Page';
-      return title;
-    };
-
-    const computeFooter = (d: d3.HierarchyPointNode<SitemapNode>) => {
-      try {
-        const hostname = new URL(d.data.url).hostname;
-        return hostname.replace(/^www\./, '');
-      } catch (_) {
-        return 'Link';
-      }
-    };
+    // (moved earlier)
 
     // Title section (purple)
     nodes.append('rect')
