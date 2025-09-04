@@ -60,6 +60,9 @@ const App: React.FC = () => {
       
       setSitemapData(data);
       setProgress(prev => ({ ...prev, isComplete: true }));
+      console.log('Crawl complete, setting active tab to visual');
+      setActiveTab('visual'); // Switch to Visual Tree View after crawl completes
+      console.log('activeTab after setting:', 'visual');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred during crawling');
     } finally {
@@ -167,57 +170,10 @@ const App: React.FC = () => {
             />
           </div>
 
-          {/* Crawl Options */}
-          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
-            <CrawlOptionsComponent
-              options={crawlOptions}
-              onOptionsChange={setCrawlOptions}
-              disabled={isCrawling}
-            />
-          </div>
-
-          {/* Progress Bar */}
-          {isCrawling && (
-            <div className="animate-slide-up">
-              <ProgressBar
-                progress={progress}
-                isComplete={progress.isComplete}
-              />
-            </div>
-          )}
-
-          {/* Error Display */}
-          {error && (
-            <div className="animate-slide-up">
-              <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-2xl p-6 shadow-soft">
-                <div className="flex items-center gap-3 text-red-800">
-                  <div className="w-12 h-12 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center">
-                    <span className="text-red-600 text-xl font-bold">!</span>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-lg">Error occurred</span>
-                    <p className="text-red-700 mt-1">{error}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Results */}
           {sitemapData && (
-            <>
-              {/* Export Options */}
-              <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
-                <ExportOptions
-                  sitemapData={sitemapData}
-                  onExportXML={handleExportXML}
-                  onExportJSON={handleExportJSON}
-                  onExportCSV={handleExportCSV}
-                />
-              </div>
-
+            <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
               {/* Visualization Tabs */}
-              <div className="animate-fade-in bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-large">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-large">
                 <div className="border-b border-gray-100">
                   <nav className="flex space-x-8 px-8">
                     <button
@@ -321,6 +277,57 @@ const App: React.FC = () => {
                     </div>
                   )}
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Crawl Options */}
+          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <CrawlOptionsComponent
+              options={crawlOptions}
+              onOptionsChange={setCrawlOptions}
+              disabled={isCrawling}
+            />
+          </div>
+
+          {/* Progress Bar */}
+          {isCrawling && (
+            <div className="animate-slide-up">
+              <ProgressBar
+                progress={progress}
+                isComplete={progress.isComplete}
+              />
+            </div>
+          )}
+
+          {/* Error Display */}
+          {error && (
+            <div className="animate-slide-up">
+              <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-2xl p-6 shadow-soft">
+                <div className="flex items-center gap-3 text-red-800">
+                  <div className="w-12 h-12 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center">
+                    <span className="text-red-600 text-xl font-bold">!</span>
+                  </div>
+                  <div>
+                    <span className="font-semibold text-lg">Error occurred</span>
+                    <p className="text-red-700 mt-1">{error}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Results */}
+          {sitemapData && (
+            <>
+              {/* Export Options */}
+              <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                <ExportOptions
+                  sitemapData={sitemapData}
+                  onExportXML={handleExportXML}
+                  onExportJSON={handleExportJSON}
+                  onExportCSV={handleExportCSV}
+                />
               </div>
             </>
           )}
