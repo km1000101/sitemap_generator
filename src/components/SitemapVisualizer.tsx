@@ -326,7 +326,8 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .attr('width', cardWidth - 20)
       .attr('height', sectionHeights.title)
       .attr('rx', 6)
-      .attr('fill', '#8b5cf6');
+      .attr('fill', '#8b5cf6')
+      .attr('class', 'title-rect');
 
     const titleDisplay = nodes.append('foreignObject')
       .attr('class', 'title-display')
@@ -338,17 +339,14 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     titleDisplay
       .append('xhtml:div')
       .style('width', `${cardWidth - 20}px`)
-      .style('height', `${sectionHeights.title}px`)
-      .style('display', '-webkit-box')
-      .style('-webkit-line-clamp', '1')
-      .style('-webkit-box-orient', 'vertical')
-      .style('overflow', 'hidden')
-      .style('text-overflow', 'ellipsis')
+      .style('min-height', `${sectionHeights.title}px`)
+      .style('overflow-wrap', 'break-word')
       .style('text-align', 'center')
       .style('color', '#ffffff')
       .style('font-weight', '700')
       .style('font-size', '12px')
-      .style('line-height', `${sectionHeights.title}px`)
+      .style('line-height', '16px')
+      .style('padding', '6px 6px 4px')
       .text(d => computeTitle(d as any));
 
     titleDisplay.on('dblclick', (event, d: any) => {
@@ -369,7 +367,8 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .attr('width', cardWidth - 20)
       .attr('height', sectionHeights.description)
       .attr('rx', 6)
-      .attr('fill', '#60a5fa');
+      .attr('fill', '#60a5fa')
+      .attr('class', 'desc-rect');
 
     const descDisplay = nodes.append('foreignObject')
       .attr('class', 'desc-display')
@@ -381,13 +380,8 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     descDisplay
       .append('xhtml:div')
       .style('width', `${cardWidth - 20}px`)
-      .style('height', `${sectionHeights.description}px`)
-      .style('padding', '4px 6px')
-      .style('display', '-webkit-box')
-      .style('-webkit-line-clamp', '4')
-      .style('-webkit-box-orient', 'vertical')
-      .style('overflow', 'hidden')
-      .style('text-overflow', 'ellipsis')
+      .style('overflow-wrap', 'break-word')
+      .style('padding', '8px 10px')
       .style('text-align', 'center')
       .style('color', '#0b122b')
       .style('font-weight', '600')
@@ -538,7 +532,11 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       const descH = Math.max(24, measuredDesc);
 
       titleFO.attr('height', titleH);
+      group.select<SVGRectElement>('rect.title-rect').attr('height', titleH);
       descFO
+        .attr('y', headerHeight + 12 + sectionHeights.title + (titleH - sectionHeights.title))
+        .attr('height', descH);
+      group.select<SVGRectElement>('rect.desc-rect')
         .attr('y', headerHeight + 12 + sectionHeights.title + (titleH - sectionHeights.title))
         .attr('height', descH);
 
