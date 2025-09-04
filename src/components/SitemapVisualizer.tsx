@@ -18,6 +18,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
 
   useEffect(() => {
     if (!data || data.length === 0 || !svgRef.current) return;
@@ -28,12 +29,21 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     const svg = d3.select(svgRef.current);
     const g = svg.append('g');
 
+    // Card node dimensions to emulate the reference image (moved up for layout spacing)
+    const cardWidth = 170;
+    const cardHeight = 180;
+    const headerHeight = 26;
+    const sectionHeights = { title: 44, description: 74, footer: 26 };
+
     // Create hierarchical data structure
     const root = d3.hierarchy(data[0]);
-    
-    // Set up the tree layout
+
+    // Set up the tree layout with explicit node size and separation for neat spacing
+    const horizontalGap = 120; // extra space between columns
+    const verticalGap = 60; // extra space between siblings vertically
     const treeLayout = d3.tree<SitemapNode>()
-      .size([height - 120, width - 120]);
+      .nodeSize([cardHeight + verticalGap, cardWidth + horizontalGap])
+      .separation((a, b) => (a.parent === b.parent ? 1.4 : 1.8));
 
     // Generate the tree layout
     const treeData = treeLayout(root);
@@ -75,11 +85,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .append('stop').attr('offset', '0%').attr('stop-color', '#F77C21') /* accent-400 */
       .append('stop').attr('offset', '100%').attr('stop-color', '#C44A00'); /* accent-600 */
 
-    // Card node dimensions to emulate the reference image
-    const cardWidth = 170;
-    const cardHeight = 180;
-    const headerHeight = 26;
-    const sectionHeights = { title: 44, description: 74, footer: 26 };
+    // Card styling continues below using the same dimensions defined earlier
 
     // Create links with elbow connectors
     g.selectAll('.link')
@@ -377,6 +383,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
 
     // Apply zoom behavior to SVG
     svg.call(zoom);
+    zoomRef.current = zoom;
 
     // Cleanup function
     return () => {
@@ -387,30 +394,23 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
 
   // Zoom control functions
   const handleZoomIn = () => {
-    if (svgRef.current) {
+    if (svgRef.current && zoomRef.current) {
       const svg = d3.select(svgRef.current);
-      svg.transition().duration(300).call(
-        d3.zoom<SVGSVGElement, unknown>().scaleBy, 1.5
-      );
+      svg.transition().duration(300).call(zoomRef.current.scaleBy as any, 1.5);
     }
   };
 
   const handleZoomOut = () => {
-    if (svgRef.current) {
+    if (svgRef.current && zoomRef.current) {
       const svg = d3.select(svgRef.current);
-      svg.transition().duration(300).call(
-        d3.zoom<SVGSVGElement, unknown>().scaleBy, 1 / 1.5
-      );
+      svg.transition().duration(300).call(zoomRef.current.scaleBy as any, 1 / 1.5);
     }
   };
 
   const handleResetZoom = () => {
-    if (svgRef.current) {
+    if (svgRef.current && zoomRef.current) {
       const svg = d3.select(svgRef.current);
-      svg.transition().duration(300).call(
-        d3.zoom<SVGSVGElement, unknown>().transform,
-        d3.zoomIdentity
-      );
+      svg.transition().duration(300).call(zoomRef.current.transform as any, d3.zoomIdentity);
     }
   };
 
