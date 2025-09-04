@@ -152,7 +152,7 @@ const App: React.FC = () => {
               </div>
             </div>
             <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 shadow-sm">
-              <div className="w-2.5 h-2.5 bg-accent-500 rounded-full animate-bounce-gentle"></div>
+              <div className="w-2.5 h-2.5 bg-success-500 rounded-full animate-bounce-gentle"></div>
               <span className="text-sm font-semibold text-white-500">AI-Powered Insights</span>
             </div>
           </div>
