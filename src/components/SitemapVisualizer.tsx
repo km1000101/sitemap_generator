@@ -75,112 +75,157 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .append('stop').attr('offset', '0%').attr('stop-color', '#F77C21') /* accent-400 */
       .append('stop').attr('offset', '100%').attr('stop-color', '#C44A00'); /* accent-600 */
 
-    // Create links with enhanced styling
+    // Card node dimensions to emulate the reference image
+    const cardWidth = 170;
+    const cardHeight = 180;
+    const headerHeight = 26;
+    const sectionHeights = { title: 44, description: 74, footer: 26 };
+
+    // Create links with elbow connectors
     g.selectAll('.link')
       .data(treeData.links())
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr('d', d3.linkHorizontal<d3.HierarchyLink<SitemapNode>, d3.HierarchyPointNode<SitemapNode>>()
-        .x(d => d.y)
-        .y(d => d.x)
-      )
+      .attr('d', d => {
+        const source = { x: d.source.x, y: d.source.y + cardWidth / 2 };
+        const target = { x: d.target.x, y: d.target.y - cardWidth / 2 };
+        const midY = (source.y + target.y) / 2;
+        return `M${source.y},${source.x} C${midY},${source.x} ${midY},${target.x} ${target.y},${target.x}`;
+      })
       .style('fill', 'none')
-      .style('stroke', '#A9B9C8') /* Use a lighter primary color for links */
+      .style('stroke', '#7aa0c4')
       .style('stroke-width', '2px')
       .style('stroke-opacity', '0.8')
       .style('transition', 'all 0.3s ease');
 
-    // Create nodes
+    // Create card nodes
     const nodes = g.selectAll('.node')
       .data(treeData.descendants())
       .enter()
       .append('g')
       .attr('class', 'node')
-      .attr('transform', d => `translate(${d.y},${d.x})`)
+      .attr('transform', d => `translate(${d.y - cardWidth / 2},${d.x - cardHeight / 2})`)
       .style('cursor', 'pointer')
       .style('transition', 'all 0.3s ease');
 
-    // Add enhanced circles to nodes
-    nodes.append('circle')
-      .attr('r', d => d.children ? 8 : 6)
-      .attr('fill', d => {
-        switch (d.data.status) {
-          case 'completed': return 'url(#gradient-completed)';
-          case 'crawling': return 'url(#gradient-crawling)';
-          case 'error': return 'url(#gradient-error)';
-          default: return 'url(#gradient-default)';
-        }
-      })
-      .attr('stroke', '#ffffff')
-      .attr('stroke-width', '3px')
-      .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))');
+    // Outer card
+    nodes.append('rect')
+      .attr('rx', 12)
+      .attr('ry', 12)
+      .attr('width', cardWidth)
+      .attr('height', cardHeight)
+      .attr('fill', 'rgba(17, 24, 39, 0.6)')
+      .attr('stroke', 'rgba(255, 255, 255, 0.2)')
+      .attr('stroke-width', 1.5)
+      .attr('class', 'card-outer')
+      .style('filter', 'drop-shadow(0 8px 20px rgba(0,0,0,0.25))');
 
-    // Add status icons to nodes
-    nodes.append('text')
-      .attr('class', 'status-icon')
-      .attr('dy', '-1.2em')
+    // Header bar and dots
+    nodes.append('rect')
       .attr('x', 0)
-      .style('text-anchor', 'middle')
-      .style('font-size', '10px')
-      .style('fill', '#ffffff')
-      .style('font-weight', 'bold')
-      .text(d => {
-        switch (d.data.status) {
-          case 'completed': return '✓';
-          case 'crawling': return '⟳';
-          case 'error': return '!';
-          default: return '?';
-        }
-      });
+      .attr('y', 0)
+      .attr('width', cardWidth)
+      .attr('height', headerHeight)
+      .attr('fill', 'rgba(255,255,255,0.05)')
+      .attr('stroke', 'rgba(255,255,255,0.08)');
 
-    // Add enhanced labels to nodes
-    nodes.append('text')
-      .attr('class', 'node-label')
-      .attr('dy', '.35em')
-      .attr('x', d => d.children ? -12 : 12)
-      .style('text-anchor', d => d.children ? 'end' : 'start')
-      .style('font-size', '11px') /* Make labels bolder */
-      .style('font-weight', '600') /* Make labels bolder */
-      .style('fill', '#FFFFFF') /* Use a darker primary color for text */
-      .style('text-shadow', '0 1px 3px rgba(0,0,0,0.1)') /* More subtle text shadow */
-      .text(d => {
-        let title = d.data.title;
-        
-        // If no title, try to extract from URL
-        if (!title || title === 'No Title' || title === 'Untitled Page') {
-          try {
-            const urlPath = new URL(d.data.url).pathname;
-            const pathSegments = urlPath.split('/').filter(segment => segment.length > 0);
-            if (pathSegments.length > 0) {
-              const lastSegment = pathSegments[pathSegments.length - 1];
-              title = lastSegment.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, '');
-              title = title.charAt(0).toUpperCase() + title.slice(1);
-            }
-          } catch (e) {
-            // URL parsing failed, use fallback
+    const dots = nodes.append('g').attr('transform', 'translate(10,13)');
+    dots.append('circle').attr('r', 3).attr('fill', '#9CA3AF');
+    dots.append('circle').attr('cx', 8).attr('r', 3).attr('fill', '#9CA3AF');
+    dots.append('circle').attr('cx', 16).attr('r', 3).attr('fill', '#9CA3AF');
+
+    // Helper to compute safe title/labels
+    const computeTitle = (d: d3.HierarchyPointNode<SitemapNode>) => {
+      let title = d.data.title;
+      if (!title || title === 'No Title' || title === 'Untitled Page') {
+        try {
+          const urlPath = new URL(d.data.url).pathname;
+          const pathSegments = urlPath.split('/').filter(segment => segment.length > 0);
+          if (pathSegments.length > 0) {
+            const lastSegment = pathSegments[pathSegments.length - 1];
+            title = lastSegment.replace(/[-_]/g, ' ').replace(/\.[^/.]+$/, '');
+            title = title.charAt(0).toUpperCase() + title.slice(1);
           }
-        }
-        
-        // Final fallback
-        if (!title || title === 'No Title' || title === 'Untitled Page') {
-          title = 'Page';
-        }
-        
-        // Truncate if too long
-        return title.length > 15 ? title.substring(0, 15) + '...' : title;
+        } catch (_) {}
+      }
+      if (!title) title = 'Page';
+      return title;
+    };
+
+    const computeFooter = (d: d3.HierarchyPointNode<SitemapNode>) => {
+      try {
+        const hostname = new URL(d.data.url).hostname;
+        return hostname.replace(/^www\./, '');
+      } catch (_) {
+        return 'Link';
+      }
+    };
+
+    // Title section (purple)
+    nodes.append('rect')
+      .attr('x', 10)
+      .attr('y', headerHeight + 6)
+      .attr('width', cardWidth - 20)
+      .attr('height', sectionHeights.title)
+      .attr('rx', 6)
+      .attr('fill', '#8b5cf6');
+
+    nodes.append('text')
+      .attr('x', cardWidth / 2)
+      .attr('y', headerHeight + 6 + sectionHeights.title / 2 + 4)
+      .style('text-anchor', 'middle')
+      .style('font-size', '12px')
+      .style('font-weight', '700')
+      .style('fill', '#ffffff')
+      .text(d => {
+        const t = computeTitle(d as any);
+        return t.length > 28 ? t.substring(0, 28) + '…' : t;
       });
 
-    // Add depth indicators
+    // Description section (blue)
+    nodes.append('rect')
+      .attr('x', 10)
+      .attr('y', headerHeight + 12 + sectionHeights.title)
+      .attr('width', cardWidth - 20)
+      .attr('height', sectionHeights.description)
+      .attr('rx', 6)
+      .attr('fill', '#60a5fa');
+
     nodes.append('text')
-      .attr('class', 'depth-indicator')
-      .attr('dy', '1.2em')
-      .attr('x', 0)
+      .attr('x', cardWidth / 2)
+      .attr('y', headerHeight + 12 + sectionHeights.title + 18)
       .style('text-anchor', 'middle')
-      .style('font-size', '10px') /* Slightly larger depth font */
-      .style('fill', '#D1D5DB') /* Use primary color for depth */
-      .style('font-weight', '600') /* Bolder depth text */
-      .text(d => `D${d.data.depth}`);
+      .style('font-size', '11px')
+      .style('font-weight', '600')
+      .style('fill', '#0b122b')
+      .text(d => (d.data.metaTags?.description ? d.data.metaTags.description : d.data.url))
+      .call(text => text.each(function() {
+        const self = d3.select(this);
+        const textContent = self.text();
+        const maxChars = 60;
+        if (textContent.length > maxChars) {
+          self.text(textContent.substring(0, maxChars) + '…');
+        }
+      }));
+
+    // Footer section (green)
+    nodes.append('rect')
+      .attr('x', 10)
+      .attr('y', cardHeight - sectionHeights.footer - 10)
+      .attr('width', cardWidth - 20)
+      .attr('height', sectionHeights.footer)
+      .attr('rx', 6)
+      .attr('fill', '#22c55e');
+
+    nodes.append('text')
+      .attr('x', cardWidth / 2)
+      .attr('y', cardHeight - sectionHeights.footer - 10 + sectionHeights.footer / 2 + 4)
+      .style('text-anchor', 'middle')
+      .style('font-size', '11px')
+      .style('font-weight', '700')
+      .style('fill', '#083d19')
+      .text(d => computeFooter(d as any));
 
     // Enhanced tooltips
     const tooltip = d3.select('body').append('div')
