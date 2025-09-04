@@ -23,6 +23,39 @@ code {
     monospace;
 }
 
+/* Animated map background helpers */
+@keyframes map-pan {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-30px, -20px, 0) scale(1.02); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+
+.map-pan-slow { 
+  animation: map-pan 20s ease-in-out infinite; 
+}
+
+@keyframes arc-flow {
+  0% { stroke-dasharray: 0 1000; stroke-dashoffset: 0; }
+  50% { stroke-dasharray: 200 1000; stroke-dashoffset: -100; }
+  100% { stroke-dasharray: 0 1000; stroke-dashoffset: -200; }
+}
+
+.map-arc {
+  stroke-linecap: round;
+  animation: arc-flow 6s ease-in-out infinite;
+}
+
+.arc-delay-1 { animation-delay: 0s; }
+.arc-delay-2 { animation-delay: 1s; }
+.arc-delay-3 { animation-delay: 2s; }
+
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.3; r: 2.5; }
+  50% { opacity: 0.9; r: 3.5; }
+}
+
+.map-dot { animation: dot-pulse 2.4s ease-in-out infinite; }
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

@@ -126,7 +126,7 @@ const UrlInput: React.FC<UrlInputProps> = ({ onStartCrawl, disabled = false, isL
             <Zap className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h4 className="font-semibold text-white-500 mb-2">Pro Tip</h4>
+            <h4 className="font-semibold text-white-500 mb-2">How to use</h4>
             <p className="text-gray-400 text-sm leading-relaxed">
               Enter any website URL and we'll crawl it to discover all linked pages and create a comprehensive sitemap. 
               Our AI-powered crawler respects robots.txt and provides detailed insights about your website structure.

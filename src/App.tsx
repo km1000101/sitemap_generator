@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { SitemapData, CrawlOptions, CrawlProgress } from './types';
 import sitemapService from './services/sitemapService';
 import UrlInput from './components/UrlInput';
+import AnimatedMapBackground from './components/AnimatedMapBackground';
 import CrawlOptionsComponent from './components/CrawlOptions';
 import ProgressBar from './components/ProgressBar';
 import SitemapVisualizer from './components/SitemapVisualizer';
@@ -131,7 +132,8 @@ const App: React.FC = () => {
   }, [sitemapData]);
 
   return (
-    <div className="min-h-screen text-white-500">
+    <div className="min-h-screen text-white-500 relative">
+      <AnimatedMapBackground />
       {/* Header */}
       <header className="bg-dark-blue-800/60 backdrop-blur-lg shadow-medium border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
