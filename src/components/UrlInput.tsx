@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Play, AlertCircle, Sparkles, Zap } from 'lucide-react';
-import { RealisticGlobeIcon } from './RealisticIcons';
+import { RealisticGlobeIcon } from 'components/RealisticIcons';
 
 interface UrlInputProps {
   onStartCrawl: (url: string) => void;

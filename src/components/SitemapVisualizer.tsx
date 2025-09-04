@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import { SitemapNode } from '../types';
+import { SitemapNode } from 'types';
 import { AlertCircle, CheckCircle, Clock, ZoomIn, ZoomOut, RotateCcw, Download, FileImage, FileText } from 'lucide-react';
-import { RealisticChartIcon } from './RealisticIcons';
+import { RealisticChartIcon } from 'components/RealisticIcons';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 

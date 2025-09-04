@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
-import { SitemapNode, CrawlOptions, SitemapData, CrawlProgress, MetaTags, MetaAnalysis, StructureAnalysis } from '../types';
+import { SitemapNode, CrawlOptions, SitemapData, CrawlProgress, MetaTags, MetaAnalysis, StructureAnalysis } from 'types';
 
 class SitemapService {
   private visitedUrls = new Set<string>();

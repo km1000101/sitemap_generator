@@ -1,7 +1,7 @@
 import React from 'react';
-import { MetaAnalysis as IMetaAnalysis } from '../types';
+import { MetaAnalysis as IMetaAnalysis } from 'types';
 import { TrendingUp, AlertTriangle, CheckCircle, Target, Eye, Share2 } from 'lucide-react';
-import { RealisticTagIcon, RealisticChartIcon } from './RealisticIcons';
+import { RealisticTagIcon, RealisticChartIcon } from 'components/RealisticIcons';
 
 interface MetaAnalysisProps {
   metaAnalysis: IMetaAnalysis;

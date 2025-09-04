@@ -1,17 +1,17 @@
 import React, { useState, useCallback } from 'react';
-import { SitemapData, CrawlOptions, CrawlProgress } from './types';
-import sitemapService from './services/sitemapService';
-import UrlInput from './components/UrlInput';
-import AnimatedMapBackground from './components/AnimatedMapBackground';
-import CrawlOptionsComponent from './components/CrawlOptions';
-import ProgressBar from './components/ProgressBar';
-import SitemapVisualizer from './components/SitemapVisualizer';
-import SitemapList from './components/SitemapList';
-import ExportOptions from './components/ExportOptions';
-import MetaAnalysis from './components/MetaAnalysis';
-import StructureAnalysis from './components/StructureAnalysis';
+import { SitemapData, CrawlOptions, CrawlProgress } from 'types';
+import sitemapService from 'services/sitemapService';
+import UrlInput from 'components/UrlInput';
+import AnimatedMapBackground from 'components/AnimatedMapBackground';
+import CrawlOptionsComponent from 'components/CrawlOptions';
+import ProgressBar from 'components/ProgressBar';
+import SitemapVisualizer from 'components/SitemapVisualizer';
+import SitemapList from 'components/SitemapList';
+import ExportOptions from 'components/ExportOptions';
+import MetaAnalysis from 'components/MetaAnalysis';
+import StructureAnalysis from 'components/StructureAnalysis';
 import { AlertTriangle } from 'lucide-react';
-import { RealisticChartIcon, RealisticListIcon, RealisticTagIcon, RealisticBranchIcon } from './components/RealisticIcons';
+import { RealisticChartIcon, RealisticListIcon, RealisticTagIcon, RealisticBranchIcon } from 'components/RealisticIcons';
 
 const defaultCrawlOptions: CrawlOptions = {
   maxDepth: 3,

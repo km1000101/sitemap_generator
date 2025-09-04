@@ -1,5 +1,5 @@
 import React from 'react';
-import { CrawlOptions as ICrawlOptions } from '../types';
+import { CrawlOptions as ICrawlOptions } from 'types';
 import { Settings, Globe, Clock, Image, ExternalLink, Shield, Zap, Target, Layers, Tag, FileText, Share2, Code } from 'lucide-react';
 
 interface CrawlOptionsProps {

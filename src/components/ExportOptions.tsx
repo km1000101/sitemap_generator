@@ -1,7 +1,7 @@
 import React from 'react';
-import { SitemapData } from '../types';
+import { SitemapData } from 'types';
 import { Download, FileText, Code, Share2, FileDown, Database, Table } from 'lucide-react';
-import { RealisticDocumentIcon } from './RealisticIcons';
+import { RealisticDocumentIcon } from 'components/RealisticIcons';
 
 interface ExportOptionsProps {
   sitemapData: SitemapData | null;

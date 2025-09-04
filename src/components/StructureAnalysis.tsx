@@ -1,7 +1,7 @@
 import React from 'react';
-import { StructureAnalysis as IStructureAnalysis } from '../types';
+import { StructureAnalysis as IStructureAnalysis } from 'types';
 import { Link, Image, FileText, Layers, AlertTriangle, TrendingUp } from 'lucide-react';
-import { RealisticBranchIcon, RealisticChartIcon } from './RealisticIcons';
+import { RealisticBranchIcon, RealisticChartIcon } from 'components/RealisticIcons';
 
 interface StructureAnalysisProps {
   structureAnalysis: IStructureAnalysis;

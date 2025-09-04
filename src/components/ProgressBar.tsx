@@ -1,5 +1,5 @@
 import React from 'react';
-import { CrawlProgress } from '../types';
+import { CrawlProgress } from 'types';
 import { Loader2, CheckCircle, AlertCircle, TrendingUp, Target, Clock } from 'lucide-react';
 
 interface ProgressBarProps {

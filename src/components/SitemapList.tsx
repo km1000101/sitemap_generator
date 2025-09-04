@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { SitemapNode } from '../types';
+import { SitemapNode } from 'types';
 import { ChevronRight, ChevronDown, ExternalLink, AlertCircle, CheckCircle, Clock, Globe, FileText, Layers } from 'lucide-react';
-import { RealisticListIcon } from './RealisticIcons';
+import { RealisticListIcon } from 'components/RealisticIcons';
 
 interface SitemapListProps {
   nodes: SitemapNode[];

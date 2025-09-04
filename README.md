@@ -1,161 +1,120 @@
 # Sitemap Generator
 
-A modern, React-based web application for generating comprehensive sitemaps by crawling websites. Built with TypeScript, D3.js, and Tailwind CSS.
+Modern, browser-based sitemap generator with interactive visualization. Built with React, TypeScript, D3.js, and Tailwind CSS.
 
-## Features
+### Highlights
+- **Web crawler**: Discovers internal links and builds a tree
+- **Visual sitemap**: D3.js force/tree view and a hierarchical list
+- **Exports**: XML, JSON, CSV (and image/PDF via `html2canvas` + `jspdf`)
+- **Controls**: Depth/page limits, delay, external links toggle, robots.txt
+- **Progress**: Real‑time crawl status and cancel support
 
-- **Web Crawling**: Automatically discover and crawl website pages
-- **Visual Sitemap**: Interactive D3.js tree visualization
-- **List View**: Hierarchical list representation with expandable nodes
-- **Multiple Export Formats**: XML, JSON, and CSV export options
-- **Configurable Crawling**: Customize depth, page limits, and delays
-- **Real-time Progress**: Live crawling progress with status updates
-- **Modern UI**: Beautiful, responsive interface built with Tailwind CSS
-- **TypeScript**: Full type safety and modern development experience
+## Quick start
 
-## Screenshots
+Prerequisites:
+- Node.js 16+ (18+ recommended)
+- npm (comes with Node)
 
-The application features a clean, modern interface with:
-- URL input with validation
-- Configurable crawl options
-- Real-time progress tracking
-- Interactive visual tree diagram
-- Hierarchical list view
-- Multiple export formats
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 16+ 
-- npm or yarn
-
-### Installation
-
-1. Clone the repository:
+Clone and run locally:
 ```bash
-git clone <repository-url>
-cd sitemap-generator
-```
-
-2. Install dependencies:
-```bash
+git clone <your-repo-url> sitemap_generator
+cd sitemap_generator
 npm install
-```
-
-3. Start the development server:
-```bash
 npm start
 ```
+Open `http://localhost:3000`.
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### Building for Production
-
+Production build:
 ```bash
 npm run build
 ```
 
-## Usage
+## How to use
+1. Enter a fully qualified URL (e.g., `https://example.com`).
+2. Adjust crawl options (depth, max pages, delay, external links, robots).
+3. Start crawl and watch progress.
+4. Explore results in the visual map and list.
+5. Export sitemap as XML/JSON/CSV or save a snapshot.
 
-1. **Enter Website URL**: Input the website URL you want to crawl
-2. **Configure Options**: Set crawl depth, page limits, and other preferences
-3. **Start Crawling**: Click "Start Crawling" to begin the process
-4. **Monitor Progress**: Watch real-time progress updates
-5. **View Results**: Explore the sitemap in visual tree or list format
-6. **Export Data**: Download in XML, JSON, or CSV format
+## Crawl options
+- **Max depth**: Limits traversal depth from the start URL
+- **Max pages**: Hard cap on number of pages to crawl
+- **Delay (ms)**: Throttle between requests
+- **Include external links**: Follow off‑domain links when enabled
+- **Respect robots.txt**: Avoid URLs disallowed by site rules
 
-## Crawl Options
+## Exports
+- **XML**: Search‑engine friendly sitemap format
+- **JSON**: Raw structured data of nodes/edges
+- **CSV**: Flat list for spreadsheet analysis
 
-- **Max Depth**: How deep to crawl from the starting URL (1-10)
-- **Max Pages**: Maximum number of pages to crawl (1-1000)
-- **Delay**: Time between requests in milliseconds
-- **Include Images**: Whether to include image URLs
-- **Include External Links**: Whether to include external website links
-- **Respect robots.txt**: Follow website crawling rules
+## Architecture
+- **React 18 + TypeScript** UI
+- **Tailwind CSS** for styling
+- **D3.js** for interactive visualization
+- **Axios** for HTTP requests
+- **Cheerio** for HTML parsing
+- **html2canvas + jsPDF** for snapshots/exports
 
-## Export Formats
+Key modules:
+- `src/services/sitemapService.ts`: Crawl + sitemap generation
+- `src/components/SitemapVisualizer.tsx`: D3 visualization
+- `src/components/SitemapList.tsx`: Hierarchical list view
+- `src/components/CrawlOptions.tsx`: Crawl settings UI
+- `src/components/ExportOptions.tsx`: Export controls
 
-### XML Sitemap
-Standard XML format compatible with search engines and SEO tools.
-
-### JSON Data
-Structured data format for developers and API integration.
-
-### CSV Report
-Spreadsheet format for analysis and reporting.
-
-## Technical Details
-
-### Architecture
-- **Frontend**: React 18 with TypeScript
-- **Styling**: Tailwind CSS for modern, responsive design
-- **Visualization**: D3.js for interactive tree diagrams
-- **HTTP Client**: Axios for web requests
-- **HTML Parsing**: Cheerio for DOM manipulation
-
-### Key Components
-- `SitemapService`: Core crawling and sitemap generation logic
-- `SitemapVisualizer`: D3.js-based tree visualization
-- `SitemapList`: Hierarchical list view component
-- `CrawlOptions`: Configuration interface
-- `ProgressBar`: Real-time progress tracking
-- `ExportOptions`: Multi-format export functionality
-
-### Performance Features
-- Configurable request delays to respect server resources
-- Abort controller for stopping crawls mid-process
-- Efficient URL deduplication
-- Memory-conscious tree structure
-
-## Browser Compatibility
-
-- Chrome 90+
-- Firefox 88+
-- Safari 14+
-- Edge 90+
-
-## Development
-
-### Project Structure
+## Project structure
 ```
 src/
-├── components/          # React components
-├── services/           # Business logic and API calls
-├── types/              # TypeScript type definitions
-├── App.tsx            # Main application component
-└── index.tsx          # Application entry point
+├─ components/           # UI components
+├─ services/             # Crawling and domain logic (e.g., sitemapService)
+├─ hooks/                # Reusable React hooks (scaffolded)
+├─ utils/                # Utilities/helpers (scaffolded)
+├─ constants/            # App-wide constants (scaffolded)
+├─ types/                # TypeScript types (barrel: src/types/index.ts)
+├─ App.tsx               # Root component
+└─ index.tsx             # Entry point
 ```
 
-### Available Scripts
-- `npm start`: Start development server
-- `npm run build`: Build for production
-- `npm test`: Run test suite
-- `npm run eject`: Eject from Create React App
+Absolute imports are enabled with `baseUrl: "src"`. Example:
+```ts
+// before
+import { SitemapData } from '../types';
+// after
+import { SitemapData } from 'types';
+```
+
+## Available scripts
+- `npm start` — start development server
+- `npm run build` — create production build
+- `npm test` — run tests (CRA)
+- `npm run eject` — eject CRA config
+
+## Notes, limitations, and tips
+- **CORS**: Crawling from the browser is subject to target site CORS and may fail if the site blocks cross‑origin requests. For strict sites, consider running a simple proxy or a server‑side crawler.
+- **robots.txt**: When enabled, disallowed paths are skipped. Always respect site policies and terms.
+- **Politeness**: Use delays and sensible page limits. Do not crawl aggressively.
+- **Authentication**: Auth‑gated content and client‑side apps behind dynamic routes may not be fully discoverable.
+
+## Troubleshooting
+- Requests fail immediately with network/CORS errors:
+  - Try a different domain, lower rate, or use a development proxy.
+- Visual map appears empty:
+  - Verify the start URL, reduce depth, check console for blocked requests.
+- Build issues on older Node:
+  - Use Node 18+ and reinstall dependencies (`rm -rf node_modules && npm install`).
+
+## Browser support
+- Latest Chrome, Edge, Firefox, Safari
 
 ## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+1. Fork the repo and create a feature branch.
+2. Make changes with TypeScript types and tests where relevant.
+3. Run `npm start` locally and ensure no console errors.
+4. Open a PR with a concise description and screenshots if UI changes.
 
 ## License
-
-This project is licensed under the MIT License.
-
-## Acknowledgments
-
-- Built with [Create React App](https://create-react-app.dev/)
-- Styling with [Tailwind CSS](https://tailwindcss.com/)
-- Visualization with [D3.js](https://d3js.org/)
-- Icons from [Lucide React](https://lucide.dev/)
-
-## Support
-
-For issues and questions, please open an issue on GitHub or contact the development team.
+MIT
 
 ---
-
-**Note**: This tool is designed for legitimate website analysis and SEO purposes. Please respect website terms of service and robots.txt files when crawling websites.
+This tool is for legitimate SEO/site‑mapping purposes. Respect `robots.txt`, terms of service, and rate limits.
