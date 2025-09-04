@@ -2,6 +2,17 @@
 
 Modern, browser-based sitemap generator with interactive visualization. Built with React, TypeScript, D3.js, and Tailwind CSS.
 
+### Documentation
+Complete documentation is available in [`DOCUMENTATION.md`](./DOCUMENTATION.md) covering:
+- Overview and features
+- Architecture and data flow
+- Component details
+- Service API reference
+- Data model specifications
+- Export formats
+- Development guide
+- Troubleshooting & FAQ
+
 ### Highlights
 - **Web crawler**: Discovers internal links and builds a tree
 - **Visual sitemap**: D3.js force/tree view and a hierarchical list
