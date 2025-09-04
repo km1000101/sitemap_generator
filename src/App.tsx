@@ -130,7 +130,7 @@ const App: React.FC = () => {
   }, [sitemapData]);
 
   return (
-    <div className="min-h-screen bg-gradient-ocean text-white-500">
+    <div className="min-h-screen text-white-500">
       {/* Header */}
       <header className="bg-dark-blue-800/60 backdrop-blur-lg shadow-medium border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
