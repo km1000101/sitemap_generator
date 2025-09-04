@@ -19,9 +19,15 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
+  const [localData, setLocalData] = useState<SitemapNode[]>(data);
+
+  // keep local editable copy in sync when incoming data changes
+  useEffect(() => {
+    setLocalData(data);
+  }, [data]);
 
   useEffect(() => {
-    if (!data || data.length === 0 || !svgRef.current) return;
+    if (!localData || localData.length === 0 || !svgRef.current) return;
 
     // Clear previous visualization
     d3.select(svgRef.current).selectAll('*').remove();
@@ -36,7 +42,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     const sectionHeights = { title: 44, description: 74, footer: 26 };
 
     // Create hierarchical data structure
-    const root = d3.hierarchy(data[0]);
+    const root = d3.hierarchy(localData[0]);
 
     // Set up the tree layout with explicit node size and separation for neat spacing
     const horizontalGap = 120; // extra space between columns
@@ -105,6 +111,80 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .style('stroke-opacity', '0.8')
       .style('transition', 'all 0.3s ease');
 
+    // Helper: inline editor for text inside boxes
+    const startInlineEdit = (
+      group: d3.Selection<SVGGElement, any, any, any>,
+      d: any,
+      field: 'title' | 'description',
+      box: { x: number; y: number; width: number; height: number },
+      onDone?: () => void
+    ) => {
+      // Remove existing editor on this node if any
+      group.selectAll('.inline-editor').remove();
+
+      const initialValue = field === 'title'
+        ? (d.data.title || '')
+        : (d.data.metaTags?.description || d.data.url || '');
+
+      const editor = group
+        .append('foreignObject')
+        .attr('class', 'inline-editor')
+        .attr('x', box.x)
+        .attr('y', box.y)
+        .attr('width', box.width)
+        .attr('height', box.height)
+        .style('overflow', 'visible');
+
+      const div = (editor
+        .append('xhtml:div') as any)
+        .style('width', `${box.width - 8}px`)
+        .style('height', `${box.height - 8}px`)
+        .style('padding', '4px')
+        .style('outline', 'none')
+        .style('border-radius', '6px')
+        .style('background', field === 'title' ? 'rgba(139,92,246,0.2)' : 'rgba(96,165,250,0.2)')
+        .style('color', field === 'title' ? '#ffffff' : '#0b122b')
+        .style('font-weight', field === 'title' ? '700' : '600')
+        .style('font-size', field === 'title' ? '12px' : '11px')
+        .attr('contenteditable', 'true')
+        .text(initialValue);
+
+      // focus caret at end
+      setTimeout(() => {
+        const el = (div.node() as HTMLElement);
+        el.focus();
+        const range = document.createRange();
+        range.selectNodeContents(el);
+        range.collapse(false);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+      }, 0);
+
+      const commit = () => {
+        const newValue = (div.text() as string).trim();
+        if (field === 'title') {
+          d.data.title = newValue || d.data.title;
+        } else {
+          if (!d.data.metaTags) d.data.metaTags = {} as any;
+          d.data.metaTags.description = newValue || d.data.metaTags.description;
+        }
+        editor.remove();
+        setLocalData(prev => [...prev]);
+        if (onDone) onDone();
+      };
+
+      (div.node() as HTMLElement).addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          commit();
+        } else if (e.key === 'Escape') {
+          editor.remove();
+        }
+      });
+      (div.node() as HTMLElement).addEventListener('blur', () => commit());
+    };
+
     // Create card nodes
     const nodes = g.selectAll('.node')
       .data(treeData.descendants())
@@ -140,6 +220,77 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     dots.append('circle').attr('r', 3).attr('fill', '#9CA3AF');
     dots.append('circle').attr('cx', 8).attr('r', 3).attr('fill', '#9CA3AF');
     dots.append('circle').attr('cx', 16).attr('r', 3).attr('fill', '#9CA3AF');
+
+    // Node action buttons (add child / delete)
+    const actionGroup = nodes.append('g').attr('transform', `translate(${cardWidth - 36}, 6)`);
+    // Add button
+    const addBtn = actionGroup.append('g').style('cursor', 'pointer');
+    addBtn
+      .append('rect')
+      .attr('width', 16)
+      .attr('height', 16)
+      .attr('rx', 4)
+      .attr('fill', 'rgba(34,197,94,0.15)')
+      .attr('stroke', 'rgba(34,197,94,0.6)');
+    addBtn
+      .append('text')
+      .attr('x', 8)
+      .attr('y', 11)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 12)
+      .attr('fill', '#22c55e')
+      .text('+');
+    addBtn.on('click', (event, d: any) => {
+      event.stopPropagation();
+      const title = window.prompt('New child page title:', 'New Page');
+      if (title === null) return;
+      const url = window.prompt('New child URL:', '/new-page') || '/new-page';
+      const newNode: SitemapNode = {
+        url,
+        title: title || 'New Page',
+        depth: (d.data.depth || 0) + 1,
+        children: [],
+        status: 'pending'
+      } as SitemapNode;
+      d.data.children = Array.isArray(d.data.children) ? d.data.children : [];
+      d.data.children.push(newNode);
+      // trigger rerender
+      setLocalData(prev => [...prev]);
+    });
+
+    // Delete button (hidden for root)
+    const delGroup = nodes.append('g').attr('transform', `translate(${cardWidth - 18}, 6)`);
+    const delBtn = delGroup.append('g').style('cursor', 'pointer');
+    delBtn
+      .append('rect')
+      .attr('width', 16)
+      .attr('height', 16)
+      .attr('rx', 4)
+      .attr('fill', 'rgba(239,68,68,0.15)')
+      .attr('stroke', 'rgba(239,68,68,0.6)');
+    delBtn
+      .append('text')
+      .attr('x', 8)
+      .attr('y', 11)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', 12)
+      .attr('fill', '#ef4444')
+      .text('×');
+    delBtn.on('click', (event, d: any) => {
+      event.stopPropagation();
+      if (!d.parent) {
+        alert('Cannot delete the root node.');
+        return;
+      }
+      const confirmed = window.confirm(`Delete "${d.data.title || d.data.url}" and its children?`);
+      if (!confirmed) return;
+      const parentChildren = d.parent.data.children || [];
+      const idx = parentChildren.indexOf(d.data);
+      if (idx >= 0) {
+        parentChildren.splice(idx, 1);
+        setLocalData(prev => [...prev]);
+      }
+    });
 
     // Helper to compute safe title/labels
     const computeTitle = (d: d3.HierarchyPointNode<SitemapNode>) => {
@@ -177,17 +328,39 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .attr('rx', 6)
       .attr('fill', '#8b5cf6');
 
-    nodes.append('text')
-      .attr('x', cardWidth / 2)
-      .attr('y', headerHeight + 6 + sectionHeights.title / 2 + 4)
-      .style('text-anchor', 'middle')
-      .style('font-size', '12px')
+    const titleDisplay = nodes.append('foreignObject')
+      .attr('class', 'title-display')
+      .attr('x', 10)
+      .attr('y', headerHeight + 6)
+      .attr('width', cardWidth - 20)
+      .attr('height', sectionHeights.title);
+
+    titleDisplay
+      .append('xhtml:div')
+      .style('width', `${cardWidth - 20}px`)
+      .style('height', `${sectionHeights.title}px`)
+      .style('display', '-webkit-box')
+      .style('-webkit-line-clamp', '1')
+      .style('-webkit-box-orient', 'vertical')
+      .style('overflow', 'hidden')
+      .style('text-overflow', 'ellipsis')
+      .style('text-align', 'center')
+      .style('color', '#ffffff')
       .style('font-weight', '700')
-      .style('fill', '#ffffff')
-      .text(d => {
-        const t = computeTitle(d as any);
-        return t.length > 28 ? t.substring(0, 28) + '…' : t;
+      .style('font-size', '12px')
+      .style('line-height', `${sectionHeights.title}px`)
+      .text(d => computeTitle(d as any));
+
+    titleDisplay.on('dblclick', (event, d: any) => {
+      event.stopPropagation();
+      const group = d3.select((event.currentTarget as SVGForeignObjectElement).parentNode as SVGGElement);
+      startInlineEdit(group, d, 'title', {
+        x: 10,
+        y: headerHeight + 6,
+        width: cardWidth - 20,
+        height: sectionHeights.title
       });
+    });
 
     // Description section (blue)
     nodes.append('rect')
@@ -198,22 +371,39 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .attr('rx', 6)
       .attr('fill', '#60a5fa');
 
-    nodes.append('text')
-      .attr('x', cardWidth / 2)
-      .attr('y', headerHeight + 12 + sectionHeights.title + 18)
-      .style('text-anchor', 'middle')
-      .style('font-size', '11px')
+    const descDisplay = nodes.append('foreignObject')
+      .attr('class', 'desc-display')
+      .attr('x', 10)
+      .attr('y', headerHeight + 12 + sectionHeights.title)
+      .attr('width', cardWidth - 20)
+      .attr('height', sectionHeights.description);
+
+    descDisplay
+      .append('xhtml:div')
+      .style('width', `${cardWidth - 20}px`)
+      .style('height', `${sectionHeights.description}px`)
+      .style('padding', '4px 6px')
+      .style('display', '-webkit-box')
+      .style('-webkit-line-clamp', '4')
+      .style('-webkit-box-orient', 'vertical')
+      .style('overflow', 'hidden')
+      .style('text-overflow', 'ellipsis')
+      .style('text-align', 'center')
+      .style('color', '#0b122b')
       .style('font-weight', '600')
-      .style('fill', '#0b122b')
-      .text(d => (d.data.metaTags?.description ? d.data.metaTags.description : d.data.url))
-      .call(text => text.each(function() {
-        const self = d3.select(this);
-        const textContent = self.text();
-        const maxChars = 60;
-        if (textContent.length > maxChars) {
-          self.text(textContent.substring(0, maxChars) + '…');
-        }
-      }));
+      .style('font-size', '11px')
+      .text(d => (d.data.metaTags?.description ? d.data.metaTags.description : d.data.url));
+
+    descDisplay.on('dblclick', (event, d: any) => {
+      event.stopPropagation();
+      const group = d3.select((event.currentTarget as SVGForeignObjectElement).parentNode as SVGGElement);
+      startInlineEdit(group, d, 'description', {
+        x: 10,
+        y: headerHeight + 12 + sectionHeights.title,
+        width: cardWidth - 20,
+        height: sectionHeights.description
+      });
+    });
 
     // Footer section (green)
     nodes.append('rect')
@@ -222,7 +412,8 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .attr('width', cardWidth - 20)
       .attr('height', sectionHeights.footer)
       .attr('rx', 6)
-      .attr('fill', '#22c55e');
+      .attr('fill', '#22c55e')
+      .attr('class', 'footer-rect');
 
     nodes.append('text')
       .attr('x', cardWidth / 2)
@@ -231,6 +422,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .style('font-size', '11px')
       .style('font-weight', '700')
       .style('fill', '#083d19')
+      .attr('class', 'footer-text')
       .text(d => computeFooter(d as any));
 
     // Enhanced tooltips
@@ -332,6 +524,36 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
           .style('opacity', 0);
       });
 
+    // After initial render, expand nodes to fit their content
+    nodes.each(function(d: any) {
+      const group = d3.select(this);
+      const titleFO = group.select<SVGForeignObjectElement>('foreignObject.title-display');
+      const titleDiv = group.select<HTMLElement>('foreignObject.title-display > div');
+      const descFO = group.select<SVGForeignObjectElement>('foreignObject.desc-display');
+      const descDiv = group.select<HTMLElement>('foreignObject.desc-display > div');
+
+      const measuredTitle = (titleDiv.node() as HTMLElement)?.scrollHeight || sectionHeights.title;
+      const measuredDesc = (descDiv.node() as HTMLElement)?.scrollHeight || sectionHeights.description;
+      const titleH = Math.max(sectionHeights.title, measuredTitle);
+      const descH = Math.max(24, measuredDesc);
+
+      titleFO.attr('height', titleH);
+      descFO
+        .attr('y', headerHeight + 12 + sectionHeights.title + (titleH - sectionHeights.title))
+        .attr('height', descH);
+
+      const totalHeight = headerHeight + 6 + titleH + 12 + descH + 10 + sectionHeights.footer + 10;
+      d.data.__cardHeight = totalHeight;
+
+      // Resize card and reposition footer
+      group.select<SVGRectElement>('rect.card-outer').attr('height', totalHeight);
+      group.select<SVGRectElement>('rect.footer-rect').attr('y', totalHeight - sectionHeights.footer - 10);
+      group.select<SVGTextElement>('text.footer-text').attr('y', totalHeight - sectionHeights.footer - 10 + sectionHeights.footer / 2 + 4);
+
+      // Recenter node vertically based on new height
+      group.attr('transform', `translate(${d.y - cardWidth / 2},${d.x - totalHeight / 2})`);
+    });
+
     // Center the visualization properly
     const bounds = g.node()?.getBBox();
     if (bounds) {
@@ -390,7 +612,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       tooltip.remove();
     };
 
-  }, [data, width, height]);
+  }, [localData, width, height]);
 
   // Zoom control functions
   const handleZoomIn = () => {
