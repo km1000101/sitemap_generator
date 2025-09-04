@@ -63,17 +63,17 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
 
     // Define gradient colors
     gradients.completed
-      .append('stop').attr('offset', '0%').attr('stop-color', '#10b981')
-      .append('stop').attr('offset', '100%').attr('stop-color', '#059669');
+      .append('stop').attr('offset', '0%').attr('stop-color', '#22c55e')
+      .append('stop').attr('offset', '100%').attr('stop-color', '#16a34a');
     gradients.crawling
-      .append('stop').attr('offset', '0%').attr('stop-color', '#3b82f6')
-      .append('stop').attr('offset', '100%').attr('stop-color', '#1d4ed8');
+      .append('stop').attr('offset', '0%').attr('stop-color', '#007bff') /* brand-blue-500 */
+      .append('stop').attr('offset', '100%').attr('stop-color', '#0056b3'); /* A darker shade of brand-blue */
     gradients.error
       .append('stop').attr('offset', '0%').attr('stop-color', '#ef4444')
       .append('stop').attr('offset', '100%').attr('stop-color', '#dc2626');
     gradients.default
-      .append('stop').attr('offset', '0%').attr('stop-color', '#6b7280')
-      .append('stop').attr('offset', '100%').attr('stop-color', '#4b5563');
+      .append('stop').attr('offset', '0%').attr('stop-color', '#F77C21') /* accent-400 */
+      .append('stop').attr('offset', '100%').attr('stop-color', '#C44A00'); /* accent-600 */
 
     // Create links with enhanced styling
     g.selectAll('.link')
@@ -86,9 +86,9 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
         .y(d => d.x)
       )
       .style('fill', 'none')
-      .style('stroke', '#cbd5e1')
+      .style('stroke', '#A9B9C8') /* Use a lighter primary color for links */
       .style('stroke-width', '2px')
-      .style('stroke-opacity', '0.6')
+      .style('stroke-opacity', '0.8')
       .style('transition', 'all 0.3s ease');
 
     // Create nodes
@@ -140,10 +140,10 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .attr('dy', '.35em')
       .attr('x', d => d.children ? -12 : 12)
       .style('text-anchor', d => d.children ? 'end' : 'start')
-      .style('font-size', '11px')
-      .style('font-weight', '500')
-      .style('fill', '#374151')
-      .style('text-shadow', '0 1px 2px rgba(255,255,255,0.8)')
+      .style('font-size', '11px') /* Make labels bolder */
+      .style('font-weight', '600') /* Make labels bolder */
+      .style('fill', '#FFFFFF') /* Use a darker primary color for text */
+      .style('text-shadow', '0 1px 3px rgba(0,0,0,0.1)') /* More subtle text shadow */
       .text(d => {
         let title = d.data.title;
         
@@ -177,9 +177,9 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
       .attr('dy', '1.2em')
       .attr('x', 0)
       .style('text-anchor', 'middle')
-      .style('font-size', '9px')
-      .style('fill', '#6b7280')
-      .style('font-weight', '500')
+      .style('font-size', '10px') /* Slightly larger depth font */
+      .style('fill', '#D1D5DB') /* Use primary color for depth */
+      .style('font-weight', '600') /* Bolder depth text */
       .text(d => `D${d.data.depth}`);
 
     // Enhanced tooltips
@@ -207,18 +207,18 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
           .transition()
           .duration(200)
           .attr('r', d.children ? 10 : 8)
-          .style('filter', 'drop-shadow(0 4px 8px rgba(0,0,0,0.2))');
+          .style('filter', 'drop-shadow(0 4px 10px rgba(0,0,0,0.3))'); /* More pronounced shadow */
 
         tooltip.transition()
           .duration(200)
           .style('opacity', 1);
 
         const statusColor = {
-          'pending': '#f59e0b',
-          'completed': '#10b981',
-          'crawling': '#3b82f6',
+          'pending': '#F77C21', /* Use accent color for pending */
+          'completed': '#22c55e',
+          'crawling': '#007bff', /* Use brand-blue color for crawling */
           'error': '#ef4444'
-        }[d.data.status] || '#6b7280';
+        }[d.data.status] || '#F77C21'; /* Default to accent-400 color */
 
         // Get improved title for tooltip
         let tooltipTitle = d.data.title;
@@ -309,8 +309,8 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
         .attr('y', 10)
         .attr('width', 100)
         .attr('height', 50)
-        .attr('fill', '#3b82f6')
-        .attr('stroke', '#1d4ed8')
+        .attr('fill', '#007bff') /* Use brand-blue color */
+        .attr('stroke', '#0056b3') /* Use darker brand-blue color */
         .attr('stroke-width', '2');
       
       g.append('text')
@@ -376,7 +376,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     try {
       const svgElement = svgRef.current;
       const canvas = await html2canvas(svgElement.parentElement!, {
-        background: '#ffffff',
+        background: '#0A1128',
         useCORS: true,
         allowTaint: true,
         width: width,
@@ -399,7 +399,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     try {
       const svgElement = svgRef.current;
       const canvas = await html2canvas(svgElement.parentElement!, {
-        background: '#ffffff',
+        background: '#0A1128',
         useCORS: true,
         allowTaint: true,
         width: width,
@@ -441,51 +441,50 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
     <div className="w-full">
       <div className="mb-6 text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-blue-500 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
             <BarChart3 className="w-5 h-5 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-gray-900">Visual Tree View</h3>
+          <h3 className="text-xl font-bold text-white-500">Visual Tree View</h3>
         </div>
-        <p className="text-gray-600 text-sm">Interactive visualization of your website structure</p>
+        <p className="text-gray-400 text-sm">Interactive visualization of your website structure</p>
       </div>
       
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-large p-6">
+      <div className="bg-dark-blue-800/60 backdrop-blur-lg rounded-3xl border border-white/10 shadow-large p-6">
         {/* Controls */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 font-medium">Zoom Controls:</span>
+            <div className="flex items-center gap-2 p-3 bg-white/10 rounded-xl border border-white/20 shadow-sm">
+              <span className="text-sm text-white-500/70 font-semibold">Zoom Controls:</span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={handleZoomOut}
-                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                  className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors duration-200 border border-white/20 shadow-sm text-gray-400 hover:text-brand-blue-500"
                   title="Zoom Out"
                 >
-                  <ZoomOut className="w-4 h-4 text-gray-600" />
+                  <ZoomOut className="w-4 h-4" />
                 </button>
                 <button
                   onClick={handleZoomIn}
-                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
-                  title="Zoom In"
+                  className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors duration-200 border border-white/20 shadow-sm text-gray-400 hover:text-brand-blue-500"
                 >
-                  <ZoomIn className="w-4 h-4 text-gray-600" />
+                  <ZoomIn className="w-4 h-4" />
                 </button>
                 <button
                   onClick={handleResetZoom}
-                  className="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-200"
+                  className="p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors duration-200 border border-white/20 shadow-sm text-gray-400 hover:text-brand-blue-500"
                   title="Reset Zoom"
                 >
-                  <RotateCcw className="w-4 h-4 text-gray-600" />
+                  <RotateCcw className="w-4 h-4" />
                 </button>
               </div>
             </div>
             
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600 font-medium">Export:</span>
+            <div className="flex items-center gap-2 p-3 bg-white/10 rounded-xl border border-white/20 shadow-sm">
+              <span className="text-sm text-white-500/70 font-semibold">Export:</span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={handleDownloadPNG}
-                  className="flex items-center gap-2 px-3 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 rounded-lg transition-colors duration-200 text-sm font-medium"
+                  className="flex items-center gap-2 px-3 py-2 bg-brand-blue-900/40 hover:bg-brand-blue-800/50 text-brand-blue-100 rounded-lg transition-colors duration-200 text-sm font-semibold border border-brand-blue-700/50 shadow-sm"
                   title="Download as PNG"
                 >
                   <FileImage className="w-4 h-4" />
@@ -493,7 +492,7 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
                 </button>
                 <button
                   onClick={handleDownloadPDF}
-                  className="flex items-center gap-2 px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg transition-colors duration-200 text-sm font-medium"
+                  className="flex items-center gap-2 px-3 py-2 bg-accent-900/40 hover:bg-accent-800/50 text-accent-100 rounded-lg transition-colors duration-200 text-sm font-semibold border border-accent-700/50 shadow-sm"
                   title="Download as PDF"
                 >
                   <FileText className="w-4 h-4" />
@@ -502,14 +501,14 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
               </div>
             </div>
           </div>
-          <div className="text-sm text-gray-600">
-            <span className="font-medium">Zoom Level:</span> {Math.round(zoomLevel * 100)}%
+          <div className="text-sm text-white-500/70 font-semibold bg-white/10 px-3 py-2 rounded-xl border border-white/20 shadow-sm">
+            <span className="font-bold">Zoom Level:</span> {Math.round(zoomLevel * 100)}%
           </div>
         </div>
 
         {/* Zoom Instructions */}
-        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
+        <div className="mb-4 p-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl shadow-sm">
+          <p className="text-sm text-gray-400">
             <strong>Tip:</strong> Use mouse wheel to zoom, drag to pan, or use the zoom controls above.
           </p>
         </div>
@@ -519,27 +518,27 @@ const SitemapVisualizer: React.FC<SitemapVisualizerProps> = ({
             ref={svgRef}
             width={width}
             height={height}
-            className="mx-auto cursor-grab active:cursor-grabbing"
+            className="mx-auto cursor-grab active:cursor-grabbing bg-dark-blue-800/30 rounded-xl shadow-inner border border-white/10"
           />
         </div>
         
         {/* Legend */}
-        <div className="mt-6 flex items-center justify-center gap-6 text-sm">
+        <div className="mt-6 flex items-center justify-center gap-6 text-sm p-4 bg-white/10 rounded-xl border border-white/20 shadow-soft">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-full"></div>
-            <span className="text-gray-700">Pending</span>
+            <div className="w-4 h-4 bg-accent-500 rounded-full shadow-md"></div>
+            <span className="text-white-500/70 font-medium">Pending</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-gradient-to-br from-success-500 to-green-500 rounded-full"></div>
-            <span className="text-gray-700">Completed</span>
+            <div className="w-4 h-4 bg-success-500 rounded-full shadow-md"></div>
+            <span className="text-white-500/70 font-medium">Completed</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-gradient-to-br from-primary-500 to-blue-500 rounded-full"></div>
-            <span className="text-gray-700">Crawling</span>
+            <div className="w-4 h-4 bg-brand-blue-500 rounded-full shadow-md"></div>
+            <span className="text-white-500/70 font-medium">Crawling</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-gradient-to-br from-red-500 to-pink-500 rounded-full"></div>
-            <span className="text-gray-700">Error</span>
+            <div className="w-4 h-4 bg-red-500 rounded-full shadow-md"></div>
+            <span className="text-white-500/70 font-medium">Error</span>
           </div>
         </div>
       </div>

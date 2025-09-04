@@ -130,39 +130,39 @@ const App: React.FC = () => {
   }, [sitemapData]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-gradient-ocean text-white-500">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md shadow-soft border-b border-white/20 sticky top-0 z-50">
+      <header className="bg-dark-blue-800/60 backdrop-blur-lg shadow-medium border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-4">
               <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-glow">
+                <div className="w-12 h-12 bg-brand-blue-500 rounded-xl flex items-center justify-center shadow-lg transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
                   <Network className="w-7 h-7 text-white" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-success-400 to-success-500 rounded-full flex items-center justify-center">
-                  <Sparkles className="w-2.5 h-2.5 text-white" />
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-accent-400 rounded-full flex items-center justify-center shadow-md animate-pulse">
+                  <Sparkles className="w-3 h-3 text-white" />
                 </div>
               </div>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 via-primary-700 to-primary-600 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-white-500 to-brand-blue-500">
                   Sitemap Generator
                 </h1>
-                <p className="text-sm text-gray-600 font-medium">Modern web crawling & sitemap generation</p>
+                <p className="text-sm text-white-500/70 font-medium">Modern web crawling &amp; sitemap generation</p>
               </div>
             </div>
-            <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-gradient-to-r from-primary-50 to-blue-50 rounded-full border border-primary-100">
-              <div className="w-2 h-2 bg-primary-500 rounded-full animate-pulse-gentle"></div>
-              <span className="text-sm font-medium text-primary-700">AI-Powered</span>
+            <div className="hidden md:flex items-center gap-3 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20 shadow-sm">
+              <div className="w-2.5 h-2.5 bg-accent-500 rounded-full animate-bounce-gentle"></div>
+              <span className="text-sm font-semibold text-white-500">AI-Powered Insights</span>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="space-y-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="space-y-12">
           {/* URL Input */}
-          <div className="animate-fade-in">
+          <div className="animate-fade-in duration-500">
             <UrlInput
               onStartCrawl={handleStartCrawl}
               disabled={isCrawling}
@@ -171,23 +171,23 @@ const App: React.FC = () => {
           </div>
 
           {sitemapData && (
-            <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <div className="animate-fade-in duration-500" style={{ animationDelay: '0.1s' }}>
               {/* Visualization Tabs */}
-              <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-large">
-                <div className="border-b border-gray-100">
+              <div className="bg-dark-blue-800/60 backdrop-blur-lg rounded-3xl border border-white/10 shadow-large overflow-hidden">
+                <div className="border-b border-white/10">
                   <nav className="flex space-x-8 px-8">
                     <button
                       onClick={() => setActiveTab('visual')}
-                      className={`py-5 px-1 border-b-2 font-semibold text-sm flex items-center gap-3 transition-all duration-200 ${
+                      className={`py-5 px-1 border-b-2 font-semibold text-sm flex items-center gap-3 transition-all duration-300 transform hover:scale-105 ${
                         activeTab === 'visual'
-                          ? 'border-primary-500 text-primary-600 bg-gradient-to-r from-primary-50 to-transparent'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                          ? 'border-brand-blue-500 text-brand-blue-500'
+                          : 'border-transparent text-gray-400 hover:text-white-500 hover:border-white/20'
                       }`}
                     >
-                      <div className={`p-2 rounded-lg transition-all duration-200 ${
+                      <div className={`p-2 rounded-lg transition-all duration-300 ${
                         activeTab === 'visual' 
-                          ? 'bg-primary-100 text-primary-600' 
-                          : 'bg-gray-100 text-gray-500'
+                          ? 'bg-brand-blue-500/20 text-brand-blue-500 shadow-sm' 
+                          : 'bg-white/10 text-gray-400'
                       }`}>
                         <BarChart3 className="w-5 h-5" />
                       </div>
@@ -195,16 +195,16 @@ const App: React.FC = () => {
                     </button>
                     <button
                       onClick={() => setActiveTab('list')}
-                      className={`py-5 px-1 border-b-2 font-semibold text-sm flex items-center gap-3 transition-all duration-200 ${
+                      className={`py-5 px-1 border-b-2 font-semibold text-sm flex items-center gap-3 transition-all duration-300 transform hover:scale-105 ${
                         activeTab === 'list'
-                          ? 'border-primary-500 text-primary-600 bg-gradient-to-r from-primary-50 to-transparent'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                          ? 'border-brand-blue-500 text-brand-blue-500'
+                          : 'border-transparent text-gray-400 hover:text-white-500 hover:border-white/20'
                       }`}
                     >
-                      <div className={`p-2 rounded-lg transition-all duration-200 ${
+                      <div className={`p-2 rounded-lg transition-all duration-300 ${
                         activeTab === 'list' 
-                          ? 'bg-primary-100 text-primary-600' 
-                          : 'bg-gray-100 text-gray-500'
+                          ? 'bg-brand-blue-500/20 text-brand-blue-500 shadow-sm' 
+                          : 'bg-white/10 text-gray-400'
                       }`}>
                         <List className="w-5 h-5" />
                       </div>
@@ -212,16 +212,16 @@ const App: React.FC = () => {
                     </button>
                     <button
                       onClick={() => setActiveTab('meta')}
-                      className={`py-5 px-1 border-b-2 font-semibold text-sm flex items-center gap-3 transition-all duration-200 ${
+                      className={`py-5 px-1 border-b-2 font-semibold text-sm flex items-center gap-3 transition-all duration-300 transform hover:scale-105 ${
                         activeTab === 'meta'
-                          ? 'border-primary-500 text-primary-600 bg-gradient-to-r from-primary-50 to-transparent'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                          ? 'border-brand-blue-500 text-brand-blue-500'
+                          : 'border-transparent text-gray-400 hover:text-white-500 hover:border-white/20'
                       }`}
                     >
-                      <div className={`p-2 rounded-lg transition-all duration-200 ${
+                      <div className={`p-2 rounded-lg transition-all duration-300 ${
                         activeTab === 'meta' 
-                          ? 'bg-primary-100 text-primary-600' 
-                          : 'bg-gray-100 text-gray-500'
+                          ? 'bg-brand-blue-500/20 text-brand-blue-500 shadow-sm' 
+                          : 'bg-white/10 text-gray-400'
                       }`}>
                         <Tag className="w-5 h-5" />
                       </div>
@@ -229,16 +229,16 @@ const App: React.FC = () => {
                     </button>
                     <button
                       onClick={() => setActiveTab('structure')}
-                      className={`py-5 px-1 border-b-2 font-semibold text-sm flex items-center gap-3 transition-all duration-200 ${
+                      className={`py-5 px-1 border-b-2 font-semibold text-sm flex items-center gap-3 transition-all duration-300 transform hover:scale-105 ${
                         activeTab === 'structure'
-                          ? 'border-primary-500 text-primary-600 bg-gradient-to-r from-primary-50 to-transparent'
-                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                          ? 'border-brand-blue-500 text-brand-blue-500'
+                          : 'border-transparent text-gray-400 hover:text-white-500 hover:border-white/20'
                       }`}
                     >
-                      <div className={`p-2 rounded-lg transition-all duration-200 ${
+                      <div className={`p-2 rounded-lg transition-all duration-300 ${
                         activeTab === 'structure' 
-                          ? 'bg-primary-100 text-primary-600' 
-                          : 'bg-gray-100 text-gray-500'
+                          ? 'bg-brand-blue-500/20 text-brand-blue-500 shadow-sm' 
+                          : 'bg-white/10 text-gray-400'
                       }`}>
                         <GitBranch className="w-5 h-5" />
                       </div>
@@ -247,7 +247,7 @@ const App: React.FC = () => {
                   </nav>
                 </div>
 
-                <div className="p-8">
+                <div className="p-8 bg-dark-blue-800/70">
                   {activeTab === 'visual' ? (
                     <SitemapVisualizer
                       data={sitemapData.nodes}
@@ -268,12 +268,12 @@ const App: React.FC = () => {
                   ) : activeTab === 'structure' && sitemapData.structureAnalysis ? (
                     <StructureAnalysis structureAnalysis={sitemapData.structureAnalysis} />
                   ) : (
-                    <div className="text-center py-12">
-                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <div className="text-center py-12 bg-white/10 rounded-xl shadow-soft border border-white/20">
+                      <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
                         <AlertTriangle className="w-8 h-8 text-gray-400" />
                       </div>
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">Analysis Not Available</h3>
-                      <p className="text-gray-500">Enable meta tag extraction and content analysis in crawl options to view this data.</p>
+                      <h3 className="text-lg font-bold text-white-500 mb-2">Analysis Not Available</h3>
+                      <p className="text-gray-400">Enable meta tag extraction and content analysis in crawl options to view this data.</p>
                     </div>
                   )}
                 </div>
@@ -282,7 +282,7 @@ const App: React.FC = () => {
           )}
 
           {/* Crawl Options */}
-          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <div className="animate-fade-in duration-500" style={{ animationDelay: '0.1s' }}>
             <CrawlOptionsComponent
               options={crawlOptions}
               onOptionsChange={setCrawlOptions}
@@ -292,7 +292,7 @@ const App: React.FC = () => {
 
           {/* Progress Bar */}
           {isCrawling && (
-            <div className="animate-slide-up">
+            <div className="animate-slide-up duration-500">
               <ProgressBar
                 progress={progress}
                 isComplete={progress.isComplete}
@@ -302,15 +302,15 @@ const App: React.FC = () => {
 
           {/* Error Display */}
           {error && (
-            <div className="animate-slide-up">
-              <div className="bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-2xl p-6 shadow-soft">
-                <div className="flex items-center gap-3 text-red-800">
-                  <div className="w-12 h-12 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center">
-                    <span className="text-red-600 text-xl font-bold">!</span>
+            <div className="animate-slide-up duration-500">
+              <div className="bg-red-900/40 backdrop-blur-md border border-red-700/50 rounded-2xl p-6 shadow-medium">
+                <div className="flex items-center gap-3 text-red-100">
+                  <div className="w-12 h-12 bg-red-800/70 rounded-full flex items-center justify-center shadow-inner">
+                    <span className="text-red-300 text-xl font-bold">!</span>
                   </div>
                   <div>
-                    <span className="font-semibold text-lg">Error occurred</span>
-                    <p className="text-red-700 mt-1">{error}</p>
+                    <span className="font-bold text-lg text-red-50">Error occurred</span>
+                    <p className="text-red-200 mt-1">{error}</p>
                   </div>
                 </div>
               </div>
@@ -321,7 +321,7 @@ const App: React.FC = () => {
           {sitemapData && (
             <>
               {/* Export Options */}
-              <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <div className="animate-fade-in duration-500" style={{ animationDelay: '0.2s' }}>
                 <ExportOptions
                   sitemapData={sitemapData}
                   onExportXML={handleExportXML}
@@ -334,10 +334,10 @@ const App: React.FC = () => {
 
           {/* Stop Crawling Button */}
           {isCrawling && (
-            <div className="flex justify-center animate-bounce-gentle">
+            <div className="flex justify-center animate-bounce-gentle duration-700">
               <button
                 onClick={handleStopCrawl}
-                className="bg-gradient-to-r from-red-500 to-red-600 text-white px-8 py-4 rounded-2xl hover:from-red-600 hover:to-red-700 transition-all duration-200 font-semibold shadow-large hover:shadow-glow-lg transform hover:scale-105"
+                className="bg-brand-blue-500 text-white-500 px-8 py-4 rounded-2xl hover:bg-brand-blue-400 transition-all duration-300 font-bold shadow-large hover:shadow-glow-lg transform hover:scale-105"
               >
                 Stop Crawling
               </button>
@@ -347,17 +347,17 @@ const App: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-white/80 backdrop-blur-md border-t border-white/20 mt-20">
+      <footer className="bg-dark-blue-800/60 backdrop-blur-lg border-t border-white/10 mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <div className="flex justify-center items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md">
                 <Network className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-semibold text-gray-900">Sitemap Generator</span>
+              <span className="text-lg font-semibold text-white-500">Sitemap Generator</span>
             </div>
-            <p className="text-gray-600 mb-2">Built with React, TypeScript, and D3.js</p>
-            <p className="text-gray-500 text-sm">
+            <p className="text-white-500/70 mb-2">Built with React, TypeScript, and D3.js</p>
+            <p className="text-gray-400 text-sm">
               A modern sitemap generator for web developers and SEO professionals
             </p>
           </div>

@@ -26,24 +26,24 @@ const MetaAnalysis: React.FC<MetaAnalysisProps> = ({ metaAnalysis }) => {
   };
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-large p-6">
+    <div className="bg-dark-blue-800/60 backdrop-blur-lg rounded-3xl border border-white/10 shadow-large p-6">
       <div className="mb-6 text-center">
         <div className="flex items-center justify-center gap-3 mb-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-accent-500 rounded-lg flex items-center justify-center shadow-md transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
             <Tag className="w-5 h-5 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-gray-900">Meta Tag Analysis</h3>
+          <h3 className="text-xl font-bold text-white-500">Meta Tag Analysis</h3>
         </div>
-        <p className="text-gray-600 text-sm">Comprehensive SEO and meta tag insights</p>
+        <p className="text-gray-400 text-sm">Comprehensive SEO and meta tag insights</p>
       </div>
 
       {/* SEO Score */}
       <div className="mb-6">
-        <div className={`p-6 rounded-2xl border-2 ${getScoreBorderColor(metaAnalysis.seoScore)} ${getScoreBgColor(metaAnalysis.seoScore)}`}>
+        <div className={`p-6 rounded-2xl border-2 ${getScoreBorderColor(metaAnalysis.seoScore)} bg-white/10 backdrop-blur-sm shadow-soft`}>
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-lg font-semibold text-gray-900 mb-2">Overall SEO Score</h4>
-              <p className="text-sm text-gray-600">Based on meta tag completeness and optimization</p>
+              <h4 className="text-lg font-semibold text-white-500 mb-2">Overall SEO Score</h4>
+              <p className="text-gray-400 text-sm">Based on meta tag completeness and optimization</p>
             </div>
             <div className="text-center">
               <div className={`text-4xl font-bold ${getScoreColor(metaAnalysis.seoScore)}`}>
@@ -57,52 +57,52 @@ const MetaAnalysis: React.FC<MetaAnalysisProps> = ({ metaAnalysis }) => {
 
       {/* Meta Tag Coverage */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
-          <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <CheckCircle className="w-5 h-5 text-blue-600" />
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 shadow-soft">
+          <h4 className="font-semibold text-white-500 mb-4 flex items-center gap-2">
+            <CheckCircle className="w-5 h-5 text-brand-blue-500" />
             Meta Tag Coverage
           </h4>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Title Tags</span>
+              <span className="text-sm text-gray-400">Title Tags</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-white-500">
                   {metaAnalysis.pagesWithTitle}/{metaAnalysis.totalPages}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                   ({Math.round((metaAnalysis.pagesWithTitle / metaAnalysis.totalPages) * 100)}%)
                 </span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Descriptions</span>
+              <span className="text-sm text-gray-400">Descriptions</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-white-500">
                   {metaAnalysis.pagesWithDescription}/{metaAnalysis.totalPages}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                   ({Math.round((metaAnalysis.pagesWithDescription / metaAnalysis.totalPages) * 100)}%)
                 </span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Keywords</span>
+              <span className="text-sm text-gray-400">Keywords</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-white-500">
                   {metaAnalysis.pagesWithKeywords}/{metaAnalysis.totalPages}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                   ({Math.round((metaAnalysis.pagesWithKeywords / metaAnalysis.totalPages) * 100)}%)
                 </span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Canonical URLs</span>
+              <span className="text-sm text-gray-400">Canonical URLs</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-white-500">
                   {metaAnalysis.pagesWithCanonical}/{metaAnalysis.totalPages}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                   ({Math.round((metaAnalysis.pagesWithCanonical / metaAnalysis.totalPages) * 100)}%)
                 </span>
               </div>
@@ -110,41 +110,41 @@ const MetaAnalysis: React.FC<MetaAnalysisProps> = ({ metaAnalysis }) => {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-100">
-          <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Share2 className="w-5 h-5 text-green-600" />
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 shadow-soft">
+          <h4 className="font-semibold text-white-500 mb-4 flex items-center gap-2">
+            <Share2 className="w-5 h-5 text-accent-500" />
             Social Media & Open Graph
           </h4>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Open Graph Tags</span>
+              <span className="text-sm text-gray-400">Open Graph Tags</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-white-500">
                   {metaAnalysis.pagesWithOpenGraph}/{metaAnalysis.totalPages}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                   ({Math.round((metaAnalysis.pagesWithOpenGraph / metaAnalysis.totalPages) * 100)}%)
                 </span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Twitter Cards</span>
+              <span className="text-sm text-gray-400">Twitter Cards</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-white-500">
                   {metaAnalysis.pagesWithTwitterCards}/{metaAnalysis.totalPages}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                   ({Math.round((metaAnalysis.pagesWithTwitterCards / metaAnalysis.totalPages) * 100)}%)
                 </span>
               </div>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Robots Meta</span>
+              <span className="text-sm text-gray-400">Robots Meta</span>
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-900">
+                <span className="text-sm font-medium text-white-500">
                   {metaAnalysis.pagesWithRobotsMeta}/{metaAnalysis.totalPages}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                   ({Math.round((metaAnalysis.pagesWithRobotsMeta / metaAnalysis.totalPages) * 100)}%)
                 </span>
               </div>
@@ -155,49 +155,49 @@ const MetaAnalysis: React.FC<MetaAnalysisProps> = ({ metaAnalysis }) => {
 
       {/* Content Optimization */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-100">
-          <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <BarChart3 className="w-5 h-5 text-purple-600" />
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 shadow-soft">
+          <h4 className="font-semibold text-white-500 mb-4 flex items-center gap-2">
+            <BarChart3 className="w-5 h-5 text-brand-blue-500" />
             Content Optimization
           </h4>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Avg Title Length</span>
-              <span className="text-sm font-medium text-gray-900">
+              <span className="text-sm text-gray-400">Avg Title Length</span>
+              <span className="text-sm font-medium text-white-500 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                 {Math.round(metaAnalysis.averageTitleLength)} chars
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Avg Description Length</span>
-              <span className="text-sm font-medium text-gray-900">
+              <span className="text-sm text-gray-400">Avg Description Length</span>
+              <span className="text-sm font-medium text-white-500 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                 {Math.round(metaAnalysis.averageDescriptionLength)} chars
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Total Pages Analyzed</span>
-              <span className="text-sm font-medium text-gray-900">
+              <span className="text-sm text-gray-400">Total Pages Analyzed</span>
+              <span className="text-sm font-medium text-white-500 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                 {metaAnalysis.totalPages}
               </span>
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl p-6 border border-amber-100">
-          <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-            <Target className="w-5 h-5 text-amber-600" />
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 shadow-soft">
+          <h4 className="font-semibold text-white-500 mb-4 flex items-center gap-2">
+            <Target className="w-5 h-5 text-accent-500" />
             Common Keywords
           </h4>
           <div className="space-y-2">
             {metaAnalysis.commonKeywords.slice(0, 5).map((keyword, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <span className="text-sm text-gray-700 truncate">{keyword.keyword}</span>
-                <span className="text-sm font-medium text-gray-900 bg-amber-100 px-2 py-1 rounded-full">
+              <div key={index} className="flex items-center justify-between p-2 bg-white/5 rounded-lg border border-white/10 shadow-sm">
+                <span className="text-sm text-gray-400 truncate">{keyword.keyword}</span>
+                <span className="text-sm font-medium text-white-500 bg-white/10 px-2 py-1 rounded-full border border-white/20">
                   {keyword.count}
                 </span>
               </div>
             ))}
             {metaAnalysis.commonKeywords.length === 0 && (
-              <p className="text-sm text-gray-500 text-center py-2">No keywords found</p>
+              <p className="text-sm text-gray-500 text-center py-2 bg-white/5 rounded-lg border border-white/10 shadow-sm">No keywords found</p>
             )}
           </div>
         </div>
@@ -205,35 +205,35 @@ const MetaAnalysis: React.FC<MetaAnalysisProps> = ({ metaAnalysis }) => {
 
       {/* Missing Meta Tags */}
       {metaAnalysis.missingMetaTags.length > 0 && (
-        <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-xl p-6 border border-red-100">
-          <h4 className="font-semibold text-red-900 mb-4 flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5 text-red-600" />
+        <div className="bg-red-900/40 backdrop-blur-sm rounded-xl p-6 border border-red-700/50 shadow-soft">
+          <h4 className="font-semibold text-red-50 mb-4 flex items-center gap-2">
+            <AlertTriangle className="w-5 h-5 text-red-300" />
             Areas for Improvement
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {metaAnalysis.missingMetaTags.map((tag, index) => (
-              <div key={index} className="flex items-center gap-2 text-sm text-red-700">
+              <div key={index} className="flex items-center gap-2 text-sm text-red-200 p-2 bg-white/5 rounded-lg border border-white/10 shadow-sm">
                 <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                 <span>Add {tag} meta tags</span>
               </div>
             ))}
           </div>
-          <p className="text-xs text-red-600 mt-3">
+          <p className="text-xs text-red-300 mt-3">
             Consider adding these meta tags to improve your SEO score and social media sharing.
           </p>
         </div>
       )}
 
       {/* Recommendations */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100 mt-6">
-        <h4 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-          <TrendingUp className="w-5 h-5 text-blue-600" />
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 shadow-soft mt-6">
+        <h4 className="font-semibold text-white-500 mb-4 flex items-center gap-2">
+          <TrendingUp className="w-5 h-5 text-brand-blue-500" />
           SEO Recommendations
         </h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <h5 className="font-medium text-gray-900">Immediate Actions:</h5>
-            <ul className="text-sm text-gray-700 space-y-1">
+            <h5 className="font-medium text-white-500">Immediate Actions:</h5>
+            <ul className="text-sm text-gray-400 space-y-1 p-3 bg-white/5 rounded-lg border border-white/10 shadow-sm">
               {metaAnalysis.pagesWithDescription / metaAnalysis.totalPages < 0.8 && (
                 <li>• Add meta descriptions to all pages</li>
               )}
@@ -246,8 +246,8 @@ const MetaAnalysis: React.FC<MetaAnalysisProps> = ({ metaAnalysis }) => {
             </ul>
           </div>
           <div className="space-y-2">
-            <h5 className="font-medium text-gray-900">Long-term Improvements:</h5>
-            <ul className="text-sm text-gray-700 space-y-1">
+            <h5 className="font-medium text-white-500">Long-term Improvements:</h5>
+            <ul className="text-sm text-gray-400 space-y-1 p-3 bg-white/5 rounded-lg border border-white/10 shadow-sm">
               <li>• Optimize title lengths (50-60 characters)</li>
               <li>• Write compelling meta descriptions (150-160 characters)</li>
               <li>• Implement structured data markup</li>

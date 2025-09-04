@@ -36,41 +36,41 @@ const ExportOptions: React.FC<ExportOptionsProps> = ({
   };
 
   return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 p-8 shadow-large">
+    <div className="bg-dark-blue-800/60 backdrop-blur-lg rounded-3xl border border-white/10 p-8 shadow-large">
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-12 h-12 bg-gradient-to-br from-success-500 to-green-500 rounded-xl flex items-center justify-center shadow-glow">
+        <div className="w-12 h-12 bg-accent-500 rounded-xl flex items-center justify-center shadow-lg transform rotate-[-5deg] hover:rotate-0 transition-transform duration-300">
           <Download className="w-6 h-6 text-white" />
         </div>
         <div>
-          <h3 className="text-2xl font-bold text-gray-900">Export Sitemap</h3>
-          <p className="text-gray-600">Download your sitemap in multiple formats</p>
+          <h3 className="text-2xl font-bold text-white-500">Export Sitemap</h3>
+          <p className="text-gray-400">Download your sitemap in multiple formats</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* XML Export */}
-        <div className="group bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-6 border border-orange-200 hover:border-orange-300 transition-all duration-300 hover:shadow-medium">
+        <div className="group bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:border-brand-blue-300 transition-all duration-300 shadow-soft hover:shadow-medium">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md">
               <Code className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="font-semibold text-gray-900 text-lg">XML Sitemap</span>
-              <p className="text-xs text-orange-600 font-medium">Search Engine Standard</p>
+              <span className="font-semibold text-white-500 text-lg">XML Sitemap</span>
+              <p className="text-xs text-brand-blue-500 font-medium">Search Engine Standard</p>
             </div>
           </div>
-          <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+          <p className="text-sm text-gray-400 mb-4 leading-relaxed">
             Standard XML format compatible with Google, Bing, and other search engines
           </p>
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs text-gray-500 bg-white/60 px-2 py-1 rounded-full">
+            <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
               Size: ~{formatFileSize(getEstimatedFileSize('XML'))}
             </span>
-            <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+            <div className="w-2.5 h-2.5 bg-brand-blue-500 rounded-full animate-pulse"></div>
           </div>
           <button
             onClick={onExportXML}
-            className="w-full bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl hover:from-orange-600 hover:to-red-600 transition-all duration-300 font-semibold shadow-soft hover:shadow-medium transform hover:scale-[1.02] flex items-center justify-center gap-2"
+            className="w-full bg-brand-blue-500 text-white px-6 py-3 rounded-xl hover:bg-brand-blue-400 transition-all duration-300 font-semibold shadow-soft hover:shadow-medium transform hover:scale-[1.02] flex items-center justify-center gap-2"
           >
             <FileDown className="w-4 h-4" />
             Download XML
@@ -78,28 +78,28 @@ const ExportOptions: React.FC<ExportOptionsProps> = ({
         </div>
 
         {/* JSON Export */}
-        <div className="group bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-6 border border-blue-200 hover:border-blue-300 transition-all duration-300 hover:shadow-medium">
+        <div className="group bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:border-accent-300 transition-all duration-300 shadow-soft hover:shadow-medium">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-accent-500 rounded-lg flex items-center justify-center shadow-md">
               <Database className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="font-semibold text-gray-900 text-lg">JSON Data</span>
-              <p className="text-xs text-blue-600 font-medium">Developer Friendly</p>
+              <span className="font-semibold text-white-500 text-lg">JSON Data</span>
+              <p className="text-xs text-accent-500 font-medium">Developer Friendly</p>
             </div>
           </div>
-          <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+          <p className="text-sm text-gray-400 mb-4 leading-relaxed">
             Structured data format for developers, APIs, and data processing tools
           </p>
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs text-gray-500 bg-white/60 px-2 py-1 rounded-full">
+            <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
               Size: ~{formatFileSize(getEstimatedFileSize('JSON'))}
             </span>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="w-2.5 h-2.5 bg-accent-500 rounded-full animate-pulse"></div>
           </div>
           <button
             onClick={onExportJSON}
-            className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-cyan-600 transition-all duration-300 font-semibold shadow-soft hover:shadow-medium transform hover:scale-[1.02] flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-accent-500 to-accent-700 text-white px-6 py-3 rounded-xl hover:from-accent-600 hover:to-accent-800 transition-all duration-300 font-semibold shadow-soft hover:shadow-medium transform hover:scale-[1.02] flex items-center justify-center gap-2"
           >
             <FileDown className="w-4 h-4" />
             Download JSON
@@ -107,28 +107,28 @@ const ExportOptions: React.FC<ExportOptionsProps> = ({
         </div>
 
         {/* CSV Export */}
-        <div className="group bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200 hover:border-green-300 transition-all duration-300 hover:shadow-medium">
+        <div className="group bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:border-success-300 transition-all duration-300 shadow-soft hover:shadow-medium">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-success-500 rounded-lg flex items-center justify-center shadow-md">
               <Table className="w-5 h-5 text-white" />
             </div>
             <div>
-              <span className="font-semibold text-gray-900 text-lg">CSV Report</span>
-              <p className="text-xs text-green-600 font-medium">Analysis Ready</p>
+              <span className="font-semibold text-white-500 text-lg">CSV Report</span>
+              <p className="text-xs text-success-500 font-medium">Analysis Ready</p>
             </div>
           </div>
-          <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+          <p className="text-sm text-gray-400 mb-4 leading-relaxed">
             Spreadsheet format for data analysis, reporting, and Excel integration
           </p>
           <div className="flex items-center justify-between mb-4">
-            <span className="text-xs text-gray-500 bg-white/60 px-2 py-1 rounded-full">
+            <span className="text-xs text-gray-400 bg-white/10 px-2 py-1 rounded-full border border-white/20">
               Size: ~{formatFileSize(getEstimatedFileSize('CSV'))}
             </span>
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <div className="w-2.5 h-2.5 bg-success-500 rounded-full animate-pulse"></div>
           </div>
           <button
             onClick={onExportCSV}
-            className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-emerald-600 transition-all duration-300 font-semibold shadow-soft hover:shadow-medium transform hover:scale-[1.02] flex items-center justify-center gap-2"
+            className="w-full bg-gradient-to-r from-success-500 to-success-700 text-white px-6 py-3 rounded-xl hover:from-success-600 hover:to-success-800 transition-all duration-300 font-semibold shadow-soft hover:shadow-medium transform hover:scale-[1.02] flex items-center justify-center gap-2"
           >
             <FileDown className="w-4 h-4" />
             Download CSV
@@ -137,45 +137,45 @@ const ExportOptions: React.FC<ExportOptionsProps> = ({
       </div>
 
       {/* Summary Stats */}
-      <div className="bg-gradient-to-br from-gray-50 to-slate-50 rounded-xl p-6 border border-gray-200 mb-6">
+      <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 shadow-soft mb-6">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-blue-500 rounded-lg flex items-center justify-center">
+          <div className="w-10 h-10 bg-brand-blue-500 rounded-lg flex items-center justify-center shadow-md">
             <Share2 className="w-5 h-5 text-white" />
           </div>
-          <span className="font-semibold text-gray-900 text-lg">Export Summary</span>
+          <span className="font-semibold text-white-500 text-lg">Export Summary</span>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white rounded-lg p-4 border border-gray-100">
-            <div className="text-2xl font-bold text-primary-600 mb-1">{sitemapData.totalPages}</div>
-            <div className="text-sm text-gray-600">Total Pages</div>
+          <div className="bg-white/10 rounded-lg p-4 border border-white/20 shadow-sm">
+            <div className="text-2xl font-bold text-brand-blue-500 mb-1">{sitemapData.totalPages}</div>
+            <div className="text-sm text-gray-400">Total Pages</div>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-gray-100">
-            <div className="text-2xl font-bold text-warning-600 mb-1">{(sitemapData.crawlTime / 1000).toFixed(1)}s</div>
-            <div className="text-sm text-gray-600">Crawl Time</div>
+          <div className="bg-white/10 rounded-lg p-4 border border-white/20 shadow-sm">
+            <div className="text-2xl font-bold text-accent-500 mb-1">{(sitemapData.crawlTime / 1000).toFixed(1)}s</div>
+            <div className="text-sm text-gray-400">Crawl Time</div>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-gray-100">
-            <div className="text-2xl font-bold text-success-600 mb-1">
+          <div className="bg-white/10 rounded-lg p-4 border border-white/20 shadow-sm">
+            <div className="text-2xl font-bold text-success-500 mb-1">
               {new Date(sitemapData.generatedAt).toLocaleDateString()}
             </div>
-            <div className="text-sm text-gray-600">Generated</div>
+            <div className="text-sm text-gray-400">Generated</div>
           </div>
-          <div className="bg-white rounded-lg p-4 border border-gray-100">
-            <div className="text-2xl font-bold text-info-600 mb-1">
+          <div className="bg-white/10 rounded-lg p-4 border border-white/20 shadow-sm">
+            <div className="text-2xl font-bold text-white-500 mb-1">
               ~{formatFileSize(getEstimatedFileSize('XML') + getEstimatedFileSize('JSON') + getEstimatedFileSize('CSV'))}
             </div>
-            <div className="text-sm text-gray-600">Total Size</div>
+            <div className="text-sm text-gray-400">Total Size</div>
           </div>
         </div>
       </div>
 
-      <div className="p-6 bg-gradient-to-r from-blue-50 via-primary-50 to-indigo-50 rounded-xl border border-blue-200">
+      <div className="p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 shadow-soft">
         <div className="flex items-start gap-4">
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-primary-500 rounded-lg flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 bg-brand-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 shadow-md">
             <FileText className="w-4 h-4 text-white" />
           </div>
           <div>
-            <h4 className="font-semibold text-blue-900 mb-2">Export Information</h4>
-            <p className="text-blue-800 text-sm leading-relaxed">
+            <h4 className="font-semibold text-white-500 mb-2">Export Information</h4>
+            <p className="text-gray-400 text-sm leading-relaxed">
               <strong>XML format</strong> is the industry standard for search engines. <strong>JSON format</strong> is ideal for developers and APIs. 
               <strong>CSV format</strong> is perfect for data analysis and Excel integration. Choose the format that best fits your needs.
             </p>
