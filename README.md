@@ -12,7 +12,7 @@ Complete documentation is available in [`DOCUMENTATION.md`](./DOCUMENTATION.md) 
 - Export formats
 - Development guide
 - Troubleshooting & FAQ
-  live website: https://km1000101.github.io/sitemap_generator/
+- live website: https://km1000101.github.io/sitemap_generator/
 
 ### Highlights
 - **Web crawler**: Discovers internal links and builds a tree
