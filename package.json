@@ -2,7 +2,7 @@
   "name": "sitemap-generator",
   "version": "1.0.0",
   "description": "A modern React-based sitemap generator with visual representation",
-  "homepage": ".",
+  "homepage": "https://km1000101.github.io/sitemap_generator",
   "private": true,
   "dependencies": {
     "@types/d3": "^7.4.0",
@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@types/cheerio": "^0.22.31",
-    "@types/react": "^19.1.12"
+    "@types/react": "^18.3.24",
+    "gh-pages": "^6.2.0"
   }
 }
