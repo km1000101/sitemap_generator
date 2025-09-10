@@ -95,7 +95,11 @@ const App: React.FC = () => {
   const handleExportJSON = useCallback(() => {
     if (!sitemapData) return;
     
-    const json = JSON.stringify(sitemapData, null, 2);
+    const json = JSON.stringify(
+      sitemapData,
+      (key, value) => (key === 'parent' ? undefined : value),
+      2
+    );
     const blob = new Blob([json], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
